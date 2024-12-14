@@ -1,0 +1,72 @@
+spring:
+    application:
+        name: WildGuide
+    main:
+        lazy-initialization: true
+    jmx:
+        enabled: false
+    lifecycle:
+        timeout-per-shutdown-phase: 30s
+    config:
+        import: optional:file:./.env[.properties]
+    sql:
+        init:
+            mode: always
+            schema-locations: 
+                - classpath:sql/schema-tables.sql
+                - classpath:sql/schema-indexes.sql
+                # - classpath:sql/schema-v1.sql
+            # data-locations:
+                # - classpath:sql/data-v1.sql
+    datasource:
+        url: jdbc:h2:file:./data/wildguide;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+        driverClassName: org.h2.Driver
+        username: wildguide
+        password: wildguide
+    h2:
+        console:
+            enabled: false
+
+server:
+    port: 8080
+    compression:
+        enabled: true
+        min-response-size: 1KB
+    error:
+        include-message: always
+        include-binding-errors: always
+        include-exception: true
+        # include-stacktrace: always
+    shutdown: graceful
+
+springdoc:
+    swagger-ui:
+        persist-authorization: true
+        filter: true
+        tags-sorter: alpha
+
+logging:
+    level:
+        mywild: TRACE
+        # org:
+        #     springframework:
+        #         security: TRACE
+
+mywild:
+    app:
+        name: @project.name@
+        version: @project.version@
+        devMode: false
+    jwt:
+        issuer: MyWild
+        subject: WildGuide
+        audience: ${JWT_AUDIENCE}
+        access-token-duration: 60
+        refresh-token-duration: 362
+    key:
+        private: ${PRIVATE_KEY}
+        public: ${PUBLIC_KEY}
+    cors: ${CORS}
+    wildguide:
+        page-size: 25
+        inat-results-per-page: 200
