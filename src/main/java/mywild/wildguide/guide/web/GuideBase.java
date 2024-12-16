@@ -28,4 +28,6 @@ public class GuideBase {
     @NotNull
     private GuideVisibilityType visibility;
 
+    private String iNaturalistCriteria;
+
 }

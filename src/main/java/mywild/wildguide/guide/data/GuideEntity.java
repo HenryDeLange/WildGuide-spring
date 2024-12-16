@@ -35,4 +35,6 @@ public class GuideEntity extends BaseEntity {
     @NotNull
     private GuideVisibilityType visibility;
 
+    private String iNaturalistCriteria;
+
 }

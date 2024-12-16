@@ -55,6 +55,21 @@
     "description": "The CORS allowed origins."
   },
   {
+    "name": "mywild.wildguide.concurrent-users-limit",
+    "type": "java.lang.Integer",
+    "description": "The number of active users per 5 minutes to allow before replying with HTTP Code 429."
+  },
+  {
+    "name": "mywild.wildguide.user-rate-limit",
+    "type": "java.lang.Integer",
+    "description": "The number of requests per User that can be processed per 5 minutes before replying with HTTP Code 429."
+  },
+  {
+    "name": "mywild.wildguide.global-rate-limit",
+    "type": "java.lang.Integer",
+    "description": "The number of requests from all Users that can be processed per 5 minutes before replying with HTTP Code 429."
+  },
+  {
     "name": "mywild.wildguide.page-size",
     "type": "java.lang.Integer",
     "description": "How many records to return per page for paginated queries."
