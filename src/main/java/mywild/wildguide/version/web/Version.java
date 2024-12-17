@@ -1,5 +1,6 @@
 package mywild.wildguide.version.web;
 
+import org.springframework.beans.factory.annotation.Value;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,5 +19,14 @@ public class Version {
 
     @NotBlank
     private String appVersion;
+
+    @NotBlank
+    private String commitId;
+
+    @NotBlank
+    private String branch;
+
+    @NotBlank
+    private String buildTime;
 
 }

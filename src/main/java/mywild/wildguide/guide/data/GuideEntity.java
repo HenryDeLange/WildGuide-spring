@@ -27,7 +27,7 @@ import mywild.wildguide.framework.data.BaseEntity;
 public class GuideEntity extends BaseEntity {
 
     @NotBlank
-    @Size(min = 4, max = 64)
+    @Size(min = 4, max = 128)
     private String name;
 
     private String description;
@@ -35,6 +35,6 @@ public class GuideEntity extends BaseEntity {
     @NotNull
     private GuideVisibilityType visibility;
 
-    private String iNaturalistCriteria;
+    private String inaturalistCriteria;
 
 }

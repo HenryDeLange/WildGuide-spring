@@ -34,8 +34,6 @@ public class UserService {
                 tokenService.generateToken(TokenType.REFRESH, userEntity));
     }
 
-    // TODO: keep track of login attempts and restrict it to X per hour/day, to prevent brute force attacks
-    // TODO: add rate-limit on requests
     public Tokens login(@Valid UserLogin login) {
         Optional<UserEntity> foundEntity = repo.findByUsernameAndPassword(login.getUsername().toLowerCase(),
                 login.getPassword());

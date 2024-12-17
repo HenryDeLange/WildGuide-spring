@@ -12,15 +12,27 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("version")
 public class VersionController {
 
-    // TODO: Add Git info here
-
     @Value("${mywild.app.version}")
-    private String version;
+    private String appVersion;
+
+    @Value("${git.commit.id.abbrev}")
+    private String commitId;
+
+    @Value("${git.branch}")
+    private String branch;
+
+    @Value("${git.build.time}")
+    private String buildTime;
 
     @Operation(summary = "Get server version.")
     @GetMapping("")
     public Version getVersion() {
-        return Version.builder().appVersion(version).build();
+        return Version.builder()
+            .appVersion(appVersion)
+            .commitId(commitId)
+            .branch(branch)
+            .buildTime(buildTime)
+            .build();
     }
 
 }

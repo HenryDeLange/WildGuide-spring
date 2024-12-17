@@ -1,7 +1,6 @@
-package mywild.wildguide.guide.web;
+package mywild.wildguide.guide_entry.web;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import mywild.wildguide.guide.data.GuideVisibilityType;
 
 @ToString(callSuper = true)
 @Getter
@@ -17,17 +15,16 @@ import mywild.wildguide.guide.data.GuideVisibilityType;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class GuideBase {
+public class EntryBase {
 
     @NotBlank
-    @Size(min = 4, max = 128)
+    @Size(min = 1, max = 128)
     private String name;
+
+    private String summary;
 
     private String description;
 
-    @NotNull
-    private GuideVisibilityType visibility;
-
-    private String inaturalistCriteria;
+    private Long inaturalistTaxon;
 
 }

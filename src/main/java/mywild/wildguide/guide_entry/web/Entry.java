@@ -1,13 +1,11 @@
-package mywild.wildguide.guide.data;
+package mywild.wildguide.guide_entry.web;
 
-import org.springframework.data.relational.core.mapping.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import mywild.wildguide.framework.data.BaseEntity;
 
 @ToString(callSuper = true)
 @Getter
@@ -15,11 +13,10 @@ import mywild.wildguide.framework.data.BaseEntity;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("guide_owners")
-public class GuideOwnerLink extends BaseEntity {
+public class Entry extends EntryBase {
+
+    private long id;
 
     private long guideId;
-
-    private long userId;
 
 }

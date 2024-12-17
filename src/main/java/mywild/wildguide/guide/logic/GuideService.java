@@ -21,6 +21,7 @@ import mywild.wildguide.guide.data.GuideRepository;
 import mywild.wildguide.guide.data.GuideVisibilityType;
 import mywild.wildguide.guide.web.Guide;
 import mywild.wildguide.guide.web.GuideBase;
+import mywild.wildguide.guide_entry.data.EntryRepository;
 
 @Validated
 @Service
@@ -38,6 +39,9 @@ public class GuideService {
     @Autowired
     private GuideMemberLinkRepository repoGuideMember;
 
+    @Autowired
+    private EntryRepository repoEntry;
+
     public @Valid Paged<Guide> findGuides(long userId, int page) {
         List<GuideEntity> entities = repoGuide.findByVisibilityOrOwnerOrMember(
             GuideVisibilityType.PUBLIC, userId, userId, pageSize, page * pageSize);
@@ -48,9 +52,9 @@ public class GuideService {
 
     public @Valid Guide findGuide(long userId, long guideId) {
         GuideEntity entity = findGuide(userId, guideId, false);
-        boolean isOwner = repoGuideOwner.existsByGuideIdAndUserId(guideId, userId);
-        boolean isMember = repoGuideMember.existsByGuideIdAndUserId(guideId, userId);
-        if (entity.getVisibility() == GuideVisibilityType.PRIVATE && !isOwner && !isMember) {
+        if (entity.getVisibility() == GuideVisibilityType.PRIVATE
+                && !repoGuideOwner.existsByGuideIdAndUserId(guideId, userId)
+                && !repoGuideMember.existsByGuideIdAndUserId(guideId, userId)) {
             throw new ForbiddenException("Guide not accessible by this User!");
         }
         return GuideMapper.INSTANCE.entityToDto(entity);
@@ -58,15 +62,15 @@ public class GuideService {
 
     @Transactional
     public @Valid Guide createGuide(long userId, @Valid GuideBase guideBase) {
-        Guide guide = GuideMapper.INSTANCE.entityToDto(
+        Guide entity = GuideMapper.INSTANCE.entityToDto(
             repoGuide.save(GuideMapper.INSTANCE.dtoToEntity(
                 GuideMapper.INSTANCE.baseDtoToFullDto(guideBase))));
-        repoGuideOwner.save(new GuideOwnerLink(0, guide.getId(), userId));
-        return guide;
+        repoGuideOwner.save(new GuideOwnerLink(entity.getId(), userId));
+        return entity;
     }
 
     @Transactional
-    public @Valid Guide updateGuide(long userId, long guideId,  @Valid GuideBase guideBase) {
+    public @Valid Guide updateGuide(long userId, long guideId, @Valid GuideBase guideBase) {
         GuideEntity entity = findGuide(userId, guideId, true);
         return GuideMapper.INSTANCE.entityToDto(
             repoGuide.save(GuideMapper.INSTANCE.dtoToExistingEntity(
@@ -78,7 +82,7 @@ public class GuideService {
         GuideEntity entity = findGuide(userId, guideId, true);
         repoGuideOwner.deleteGuideOwners(guideId);
         repoGuideMember.deleteGuideMembers(guideId);
-        // TODO: Also delete all Guide Entry records
+        repoEntry.deleteGuideEntries(guideId);
         repoGuide.delete(entity);
     }
 
@@ -90,7 +94,7 @@ public class GuideService {
     public boolean ownerJoinGuide(long userId, long guideId, long ownerId) {
         checkUserIsGuideOwner(userId, guideId);
         if (!repoGuideOwner.existsByGuideIdAndUserId(guideId, ownerId)) {
-            repoGuideOwner.save(new GuideOwnerLink(0, guideId, ownerId));
+            repoGuideOwner.save(new GuideOwnerLink(guideId, ownerId));
             return true;
         }
         return false;
@@ -117,7 +121,7 @@ public class GuideService {
     public boolean memberJoinGuide(long userId, long guideId, long memberId) {
         checkUserIsGuideOwner(userId, guideId);
         if (!repoGuideMember.existsByGuideIdAndUserId(guideId, memberId)) {
-            repoGuideMember.save(new GuideMemberLink(0, guideId, memberId));
+            repoGuideMember.save(new GuideMemberLink(guideId, memberId));
             return true;
         }
         return false;

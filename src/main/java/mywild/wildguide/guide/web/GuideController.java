@@ -31,7 +31,7 @@ public class GuideController {
         @RequestParam(defaultValue = "0") int page
     ) {
         return service.findGuides(
-            JwtUtils.getUserIdFromJwt(jwtToken), 
+            JwtUtils.getUserIdFromJwt(jwtToken),
             page);
     }
 
@@ -42,7 +42,7 @@ public class GuideController {
         @PathVariable long guideId
     ) {
         return service.findGuide(
-            JwtUtils.getUserIdFromJwt(jwtToken), 
+            JwtUtils.getUserIdFromJwt(jwtToken),
             guideId);
     }
 
@@ -53,7 +53,7 @@ public class GuideController {
         @RequestBody GuideBase dto
     ) {
         return service.createGuide(
-            JwtUtils.getUserIdFromJwt(jwtToken), 
+            JwtUtils.getUserIdFromJwt(jwtToken),
             dto);
     }
 
@@ -65,8 +65,8 @@ public class GuideController {
         @RequestBody GuideBase dto
     ) {
         return service.updateGuide(
-            JwtUtils.getUserIdFromJwt(jwtToken), 
-            guideId, 
+            JwtUtils.getUserIdFromJwt(jwtToken),
+            guideId,
             dto);
     }
 
@@ -77,7 +77,7 @@ public class GuideController {
         @PathVariable long guideId
     ) {
         service.deleteGuide(
-            JwtUtils.getUserIdFromJwt(jwtToken), 
+            JwtUtils.getUserIdFromJwt(jwtToken),
             guideId);
     }
 
@@ -98,8 +98,8 @@ public class GuideController {
         @PathVariable long ownerId
     ) {
         return service.ownerJoinGuide(
-            JwtUtils.getUserIdFromJwt(jwtToken), 
-            guideId, 
+            JwtUtils.getUserIdFromJwt(jwtToken),
+            guideId,
             ownerId);
     }
 
@@ -111,8 +111,8 @@ public class GuideController {
         @PathVariable long ownerId
     ) {
         return service.ownerLeaveGuide(
-            JwtUtils.getUserIdFromJwt(jwtToken), 
-            guideId, 
+            JwtUtils.getUserIdFromJwt(jwtToken),
+            guideId,
             ownerId);
     }
 
@@ -133,8 +133,8 @@ public class GuideController {
         @PathVariable long memberId
     ) {
         return service.memberJoinGuide(
-            JwtUtils.getUserIdFromJwt(jwtToken), 
-            guideId, 
+            JwtUtils.getUserIdFromJwt(jwtToken),
+            guideId,
             memberId);
     }
 
@@ -142,12 +142,12 @@ public class GuideController {
     @DeleteMapping("/guides/{guideId}/members/{memberId}")
     public boolean memberLeaveGuide(
         JwtAuthenticationToken jwtToken,
-        @PathVariable long guideId, 
+        @PathVariable long guideId,
         @PathVariable long memberId
     ) {
         return service.memberLeaveGuide(
-            JwtUtils.getUserIdFromJwt(jwtToken), 
-            guideId, 
+            JwtUtils.getUserIdFromJwt(jwtToken),
+            guideId,
             memberId);
     }
 
