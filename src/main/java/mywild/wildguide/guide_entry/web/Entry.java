@@ -1,5 +1,6 @@
 package mywild.wildguide.guide_entry.web;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +16,10 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class Entry extends EntryBase {
 
+    @NotNull
     private long id;
 
+    @NotNull
     private long guideId;
 
 }

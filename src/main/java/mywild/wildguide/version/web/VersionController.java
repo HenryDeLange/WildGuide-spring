@@ -15,22 +15,26 @@ public class VersionController {
     @Value("${mywild.app.version}")
     private String appVersion;
 
+    @Value("${git.branch}")
+    private String branch;
+
     @Value("${git.commit.id.abbrev}")
     private String commitId;
 
-    @Value("${git.branch}")
-    private String branch;
+    @Value("${git.commit.time}")
+    private String commitTime;
 
     @Value("${git.build.time}")
     private String buildTime;
 
-    @Operation(summary = "Get server version.")
+    @Operation(summary = "Get server version and Git information.")
     @GetMapping("")
     public Version getVersion() {
         return Version.builder()
             .appVersion(appVersion)
-            .commitId(commitId)
             .branch(branch)
+            .commitId(commitId)
+            .commitTime(commitTime)
             .buildTime(buildTime)
             .build();
     }

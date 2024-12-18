@@ -21,10 +21,13 @@ public class Version {
     private String appVersion;
 
     @NotBlank
+    private String branch;
+
+    @NotBlank
     private String commitId;
 
     @NotBlank
-    private String branch;
+    private String commitTime;
 
     @NotBlank
     private String buildTime;

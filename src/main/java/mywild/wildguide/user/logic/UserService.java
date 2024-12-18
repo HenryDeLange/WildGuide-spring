@@ -14,7 +14,6 @@ import mywild.wildguide.user.data.UserRepository;
 import mywild.wildguide.user.web.Tokens;
 import mywild.wildguide.user.web.User;
 import mywild.wildguide.user.web.UserLogin;
-import mywild.wildguide.user.web.UserMapper;
 
 @Validated
 @Service
@@ -30,8 +29,11 @@ public class UserService {
     public Tokens register(@Valid User user) {
         user.setUsername(user.getUsername().trim().toLowerCase());
         UserEntity userEntity = repo.save(UserMapper.INSTANCE.dtoToEntity(user));
-        return new Tokens(userEntity.getUsername(), tokenService.generateToken(TokenType.ACCESS, userEntity),
-                tokenService.generateToken(TokenType.REFRESH, userEntity));
+        return new Tokens(
+            userEntity.getId(),
+            userEntity.getUsername(),
+            tokenService.generateToken(TokenType.ACCESS, userEntity),
+            tokenService.generateToken(TokenType.REFRESH, userEntity));
     }
 
     public Tokens login(@Valid UserLogin login) {
@@ -40,14 +42,20 @@ public class UserService {
         if (!foundEntity.isPresent())
             throw new ForbiddenException("Incorrect User credentials!");
         UserEntity entity = foundEntity.get();
-        return new Tokens(entity.getUsername(), tokenService.generateToken(TokenType.ACCESS, entity),
-                tokenService.generateToken(TokenType.REFRESH, entity));
+        return new Tokens(
+            entity.getId(),
+            entity.getUsername(),
+            tokenService.generateToken(TokenType.ACCESS, entity),
+            tokenService.generateToken(TokenType.REFRESH, entity));
     }
 
     public Tokens refresh(long userId) {
         UserEntity userEntity = getValidUser(userId);
-        return new Tokens(userEntity.getUsername(), tokenService.generateToken(TokenType.ACCESS, userEntity),
-                tokenService.generateToken(TokenType.REFRESH, userEntity));
+        return new Tokens(
+            userEntity.getId(),
+            userEntity.getUsername(),
+            tokenService.generateToken(TokenType.ACCESS, userEntity),
+            tokenService.generateToken(TokenType.REFRESH, userEntity));
     }
 
     /**

@@ -1,8 +1,9 @@
-package mywild.wildguide.user.web;
+package mywild.wildguide.user.logic;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import mywild.wildguide.user.data.UserEntity;
+import mywild.wildguide.user.web.User;
 
 @Mapper
 public interface UserMapper {
