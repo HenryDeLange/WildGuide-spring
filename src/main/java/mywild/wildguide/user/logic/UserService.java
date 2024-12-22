@@ -2,6 +2,7 @@ package mywild.wildguide.user.logic;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -25,9 +26,13 @@ public class UserService {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Transactional
     public Tokens register(@Valid User user) {
         user.setUsername(user.getUsername().trim().toLowerCase());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserEntity userEntity = repo.save(UserMapper.INSTANCE.dtoToEntity(user));
         return new Tokens(
             userEntity.getId(),
@@ -37,9 +42,8 @@ public class UserService {
     }
 
     public Tokens login(@Valid UserLogin login) {
-        Optional<UserEntity> foundEntity = repo.findByUsernameAndPassword(login.getUsername().toLowerCase(),
-                login.getPassword());
-        if (!foundEntity.isPresent())
+        Optional<UserEntity> foundEntity = repo.findByUsername(login.getUsername().toLowerCase());
+        if (!foundEntity.isPresent() || !passwordEncoder.matches(login.getPassword(), foundEntity.get().getPassword()))
             throw new ForbiddenException("Incorrect User credentials!");
         UserEntity entity = foundEntity.get();
         return new Tokens(

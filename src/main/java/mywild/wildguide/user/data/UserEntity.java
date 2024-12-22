@@ -25,7 +25,7 @@ public class UserEntity extends BaseEntity {
     private String username;
 
     @NotBlank
-    @Size(min = 8, max = 256)
+    @Size(min = 60, max = 60)
     private String password;
 
 }
