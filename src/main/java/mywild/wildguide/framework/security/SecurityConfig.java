@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
@@ -83,6 +84,7 @@ public class SecurityConfig {
                     .requestMatchers("/users/login").permitAll()
                     .requestMatchers("/users/refresh/**").hasAuthority("SCOPE_refresh")
                     // All other Endpoints
+                    .requestMatchers(HttpMethod.GET, "/guides/**").permitAll()
                     // .anyRequest().authenticated()
                     .anyRequest().hasAuthority("SCOPE_access");
             })

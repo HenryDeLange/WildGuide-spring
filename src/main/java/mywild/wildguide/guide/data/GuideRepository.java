@@ -15,7 +15,7 @@ public interface GuideRepository extends CrudRepository<GuideEntity, Long> {
         + "WHERE g.visibility = :visibility "
         + "OR go.user_id = :ownerId " 
         + "OR gm.user_id = :memberId "
-        + "ORDER BY g.name ASC "
+        + "ORDER BY LOWER(g.name) ASC "
         + "LIMIT :limit OFFSET :offset")
     List<GuideEntity> findByVisibilityOrOwnerOrMember(
         GuideVisibilityType visibility, long ownerId, long memberId, int limit, int offset);

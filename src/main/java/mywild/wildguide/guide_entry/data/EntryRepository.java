@@ -12,7 +12,7 @@ public interface EntryRepository extends CrudRepository<EntryEntity, Long> {
     @Query("SELECT ge.* "
         + "FROM \"guide_entries\" ge " 
         + "WHERE ge.guide_id = :guideId "
-        + "ORDER BY ge.name ASC "
+        + "ORDER BY LOWER(ge.name) ASC "
         + "LIMIT :limit OFFSET :offset")
     List<EntryEntity> findByGuide(
         long guideId, int limit, int offset);
