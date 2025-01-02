@@ -43,10 +43,12 @@ public class GuideService {
     private EntryRepository repoEntry;
 
     public @Valid Paged<Guide> findGuides(long userId, int page) {
+        int totalCount = repoGuide.countByVisibilityOrOwnerOrMember(
+            GuideVisibilityType.PUBLIC, userId, userId);
         List<GuideEntity> entities = repoGuide.findByVisibilityOrOwnerOrMember(
             GuideVisibilityType.PUBLIC, userId, userId, pageSize, page * pageSize);
         return new Paged<>(
-            page, pageSize, entities.size(),
+            page, pageSize, totalCount,
             entities.stream().map(GuideMapper.INSTANCE::entityToDto).toList());
     }
 

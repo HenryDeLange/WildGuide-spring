@@ -9,7 +9,7 @@ public record Paged<T>(
     @NotNull
     int pageSize,
     @NotNull
-    long totalRecords,
+    int totalRecords,
     @NotNull
     List<T> data
 ) { }
