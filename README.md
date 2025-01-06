@@ -1,6 +1,7 @@
 # TODOs:
 - TODO: Can the Maven build generate a swagger yml file to be committed?
 - TODO: Setup the Docker image build
+- TODO: Translate "know/expected" error messages from AbstractAppException based on lang from header
 
 # Wildguide-spring
 ![App Version](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Fraw.githubusercontent.com%2FHenryDeLange%2FWildGuide-spring%2Fmain%2Fpom.xml&query=%2F*%5Blocal-name()%3D'project'%5D%2F*%5Blocal-name()%3D'version'%5D&label=version)

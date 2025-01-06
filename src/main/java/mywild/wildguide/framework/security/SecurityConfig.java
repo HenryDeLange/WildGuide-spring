@@ -7,11 +7,19 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,11 +32,20 @@ import org.springframework.security.oauth2.jwt.JwtIssuerValidator;
 import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import lombok.extern.slf4j.Slf4j;
+import mywild.wildguide.framework.error.AbstractAppException;
 
+@Slf4j
 @Configuration
+@EnableAutoConfiguration(exclude = ErrorMvcAutoConfiguration.class)
 // @EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
@@ -60,6 +77,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+            .formLogin(AbstractHttpConfigurer::disable)
+            .logout(logout -> logout.disable())
             // Authorization
             .authorizeHttpRequests(authorize -> {
                 authorize
@@ -93,9 +112,10 @@ public class SecurityConfig {
             // CORS
             .cors(Customizer.withDefaults())
             // CSRF
-            // TODO: Proper CSRF tokens handling. See https://stackoverflow.com/questions/51026694/spring-security-blocks-post-requests-despite-securityconfig
-            // .addFilterAfter(new CsrfTokenResponseHeaderBindingFilter(), CsrfFilter.class)
             .csrf(csrf -> csrf.disable());
+            // TODO: Proper CSRF tokens handling.
+            //       See https://stackoverflow.com/questions/51026694/spring-security-blocks-post-requests-despite-securityconfig
+            //       .addFilterAfter(new CsrfTokenResponseHeaderBindingFilter(), CsrfFilter.class)
         if (devMode) {
             httpSecurity
                 // H2
@@ -165,28 +185,26 @@ public class SecurityConfig {
      * referencing the {@see OAuth2TokenIntrospectionClaimNames#AUD} string.
      */
     private OAuth2TokenValidator<Jwt> audienceValidator() {
-        return new JwtClaimValidator<Object>(AUD, aud -> {
-            if (aud instanceof String) {
-                return ((String) aud).contains(audience);
+        return new JwtClaimValidator<>(AUD, aud ->
+            switch (aud) {
+                case String audString -> audString.contains(audience);
+                case List audList -> audList.contains(audience);
+                default -> false;
             }
-            else {
-                return ((List) aud).contains(audience);
-            }
-        });
+        );
     }
 
     /**
      * Similar to the audience validator above, this validator checks the subject field of the JWT Token.
      */
     private OAuth2TokenValidator<Jwt> subjectValidator() {
-        return new JwtClaimValidator<Object>(SUB, sub -> {
-            if (sub instanceof String) {
-                return ((String) sub).contains(subject);
+        return new JwtClaimValidator<>(SUB, sub ->
+            switch (sub) {
+                case String subString -> subString.contains(subject);
+                case List subList -> subList.contains(subject);
+                default -> false;
             }
-            else {
-                return ((List) sub).contains(subject);
-            }
-        });
+        );
     }
 
     /**
@@ -195,6 +213,32 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * Custom response error handler, to prevent using the default "/error" endpoint, 
+     * which masks the real error codes thrown from the services.
+     */
+    @RestControllerAdvice
+    public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
+        @ExceptionHandler(Exception.class)
+        public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+            try {
+                return super.handleException(ex, request);
+            }
+            catch (Exception notHandledException) {
+                log.error(notHandledException.getMessage(), notHandledException);
+                return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+            }
+        }
+
+        @Override
+        protected ResponseEntity<Object> createResponseEntity(Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+            String jsonBody = "{ \"reason\": \"" + body + "\" }";
+            return new ResponseEntity<>(jsonBody, headers, statusCode);
+        }
+
     }
 
 }
