@@ -16,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,7 +34,6 @@ import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.cors.CorsConfiguration;
@@ -41,7 +41,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
-import mywild.wildguide.framework.error.AbstractAppException;
 
 @Slf4j
 @Configuration
@@ -188,7 +187,7 @@ public class SecurityConfig {
         return new JwtClaimValidator<>(AUD, aud ->
             switch (aud) {
                 case String audString -> audString.contains(audience);
-                case List audList -> audList.contains(audience);
+                case List<?> audList -> audList.contains(audience);
                 default -> false;
             }
         );
@@ -201,7 +200,7 @@ public class SecurityConfig {
         return new JwtClaimValidator<>(SUB, sub ->
             switch (sub) {
                 case String subString -> subString.contains(subject);
-                case List subList -> subList.contains(subject);
+                case List<?> subList -> subList.contains(subject);
                 default -> false;
             }
         );
@@ -234,7 +233,9 @@ public class SecurityConfig {
         }
 
         @Override
-        protected ResponseEntity<Object> createResponseEntity(Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+        @NonNull
+        protected ResponseEntity<Object> createResponseEntity(@Nullable Object body, @NonNull HttpHeaders headers,
+                @NonNull HttpStatusCode statusCode, @NonNull WebRequest request) {
             String jsonBody = "{ \"reason\": \"" + body + "\" }";
             return new ResponseEntity<>(jsonBody, headers, statusCode);
         }
