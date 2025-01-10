@@ -6,12 +6,39 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
+import org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
+import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.core.env.Environment;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
-@SpringBootApplication
+@SpringBootApplication(
+    scanBasePackageClasses = WildGuideApplication.class,
+    exclude = {
+        HibernateJpaAutoConfiguration.class,
+        RedisAutoConfiguration.class,
+        JpaRepositoriesAutoConfiguration.class,
+        MongoAutoConfiguration.class,
+        FlywayAutoConfiguration.class,
+        JmxAutoConfiguration.class,
+        MailSenderAutoConfiguration.class,
+        RabbitAutoConfiguration.class,
+        MongoReactiveAutoConfiguration.class,
+        CassandraAutoConfiguration.class,
+        Neo4jAutoConfiguration.class
+    }
+)
 @Slf4j
 public class WildGuideApplication {
 
@@ -62,7 +89,7 @@ public class WildGuideApplication {
         }
 
         @Override
-        public void stop(Runnable callback) {
+        public void stop(@NonNull Runnable callback) {
             stop();
             callback.run();
         }

@@ -7,12 +7,14 @@
         "JDBC",
         "MapStruct",
         "MyWild",
+        "proguard",
         "ProjectLombok",
         "SpringDoc",
         "SpringFramework",
         "webmvc",
         "whitelabel",
-        "WildGuide"
+        "WildGuide",
+        "wvengen"
     ],
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.format.settings.url": ".vscode/java-formatter.xml",

@@ -53,6 +53,8 @@ CREATE TABLE IF NOT EXISTS "guide_entries" (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     guide_id BIGINT NOT NULL,
     name VARCHAR(128) NOT NULL,
+    scientificName VARCHAR(128) NOT NULL,
+    scientificRank VARCHAR(24) NOT NULL,
     summary TEXT,
     description TEXT,
     inaturalist_taxon BIGINT,

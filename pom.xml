@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.8.0</version>
+            <version>2.8.1</version>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -116,6 +116,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
@@ -150,6 +151,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -162,19 +164,6 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>2.2.0</version>
-                <executions>
-                    <execution>
-                        <id>aggregate-download-licenses</id>
-                        <goals>
-                            <goal>aggregate-download-licenses</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>io.github.git-commit-id</groupId>
@@ -195,6 +184,96 @@
                     <commitIdGenerationMode>full</commitIdGenerationMode>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <id>aggregate-download-licenses</id>
+                        <goals>
+                            <goal>aggregate-download-licenses</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Usage: mvn dependency:analyze  |  mvn dependency:tree -->
+            <!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>analyze</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin> -->
+            <!-- TODO: Try again once Java 23 s supported (in ProGuard v7.6, but this latest plugin uses ProGuard v7.4.1) -->
+            <!-- <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.6.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <proguardConfig>${project.basedir}/proguard-rules.pro</proguardConfig>
+                </configuration>
+            </plugin> -->
+<!-- ++++++++++++ SAMPLE proguard-rules.pro FILE ++++++++++++
+# Keep the main class and entry point
+-keep class mywild.wildguide.WildGuideApplication { public static void main(java.lang.String[]); }
+
+# Keep all class members of the specified packages
+-keep class mywild.wildguide.** { *; }
+-keepclassmembers class * { @org.springframework.beans.factory.annotation.Autowired *; }
+-keepclassmembers class * { @org.springframework.beans.factory.annotation.Value *; }
+
+# Keep Spring Boot configuration classes
+-keep @org.springframework.context.annotation.Configuration class *
+-keepclassmembers class * { @org.springframework.context.annotation.Bean *; }
+
+# Keep classes with specified annotations
+-keepclassmembers class * { @org.springframework.web.bind.annotation.RequestMapping *; }
+-keepclassmembers class * { @org.springframework.web.bind.annotation.GetMapping *; }
+-keepclassmembers class * { @org.springframework.web.bind.annotation.PostMapping *; }
+-keepclassmembers class * { @org.springframework.web.bind.annotation.PutMapping *; }
+-keepclassmembers class * { @org.springframework.web.bind.annotation.DeleteMapping *; }
+
+# Keep Jackson serializers and deserializers
+-keep class com.fasterxml.jackson.** { *; }
+-keepclassmembers class com.fasterxml.jackson.databind.ObjectMapper { <init>(...); }
+
+# Keep Lombok annotated classes
+-keepclassmembers class * { @lombok.* *; }
+
+# Preserve the names of annotated methods and classes for MapStruct
+-keep, allowobfuscation, classes, and methods with annotations:
+-keep @org.mapstruct.* class *
+-keep @org.mapstruct.* interface *
+
+# Keep H2 database classes (if needed)
+-keep class org.h2.** { *; }
+
+# Optimize code by removing unused classes and methods
+-optimizationpasses 5
+-allowaccessmodification
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-verbose
+
+# Ignore warnings for missing classes
+-dontwarn org.springframework.**
+-dontwarn javax.validation.**
+-dontwarn javax.xml.bind.annotation.**
+-dontwarn javax.activation.**
+-->
         </plugins>
     </build>
 
