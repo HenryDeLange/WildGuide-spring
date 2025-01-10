@@ -11,11 +11,13 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.config.Customizer;
@@ -230,6 +232,21 @@ public class SecurityConfig {
                 log.error(notHandledException.getMessage(), notHandledException);
                 return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
             }
+        }
+
+        @Override
+        @Nullable
+        protected ResponseEntity<Object> handleExceptionInternal(@NonNull Exception ex, @Nullable Object body, @NonNull HttpHeaders headers, 
+                @NonNull HttpStatusCode statusCode, @NonNull WebRequest request) {
+            if (ex instanceof HttpMessageNotReadableException notReadableException) {
+                return createResponseEntity(notReadableException.getMessage().replace("\"", "\\\""), headers, statusCode, request);
+            }
+            else if (ex instanceof DbActionExecutionException dbException) {
+                // Don't show the database details to the frontend client
+                // TODO: Maybe look at the child type or up the causedBy chain to see if a more meaningful message can be returned (JdbcSQLIntegrityConstraintViolationException, etc.)
+                return createResponseEntity(dbException.getClass().getSimpleName(), headers, statusCode, request);
+            }
+            return super.handleExceptionInternal(ex, body, headers, statusCode, request);
         }
 
         @Override

@@ -62,5 +62,8 @@ CREATE TABLE IF NOT EXISTS "guide_entries" (
     created_date TIMESTAMP,
     last_modified_by BIGINT,
     last_modified_date TIMESTAMP,
-    FOREIGN KEY (guide_id) REFERENCES "guides"(id)
+    FOREIGN KEY (guide_id) REFERENCES "guides"(id),
+    UNIQUE (guide_id, name),
+    UNIQUE (guide_id, scientific_name),
+    UNIQUE (guide_id, inaturalist_taxon)
 );
