@@ -32,7 +32,7 @@ public class UserRateLimiter {
         .build();
 
     public Bucket getBucket(HttpServletRequest request) {
-        return bucketsCache.get(getUserId(request), k -> createNewBucket());
+        return bucketsCache.get(getUserId(request), _ -> createNewBucket());
     }
 
     public boolean withinConcurrentUserLimit() {
