@@ -9,14 +9,15 @@ public interface GuideOwnerLinkRepository extends CrudRepository<GuideOwnerLink,
 
     boolean existsByGuideIdAndUserId(long guideId, long userId);
 
-    @Query("SELECT user_id "
+    @Query("SELECT user_id, u.username "
         + "FROM \"guide_owners\" "
+        + "LEFT JOIN \"users\" u ON user_id = u.id "
         + "WHERE guide_id = :guideId "
-        + "ORDER BY user_id ASC")
-    List<Long> findAllByGuide(long guideId);
+        + "ORDER BY u.username ASC")
+    List<GuideLinkedUser> findAllByGuide(long guideId);
 
     @Modifying
-    @Query("DELETE FROM \"guide_members\" WHERE guide_id = :guideId AND user_id = :userId")
+    @Query("DELETE FROM \"guide_owners\" WHERE guide_id = :guideId AND user_id = :userId")
     void deleteByGuideIdAndUserId(long guideId, long userId);
 
     @Modifying

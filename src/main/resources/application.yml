@@ -68,8 +68,8 @@ mywild:
         public: ${PUBLIC_KEY}
     cors: ${CORS}
     wildguide:
-        concurrent-users-limit: 50
-        user-rate-limit: 50
-        global-rate-limit: 2500
-        page-size: 25
+        concurrent-users-limit: 100
+        user-rate-limit: 75
+        global-rate-limit: 3000
+        page-size: 50
         inat-results-per-page: 200

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import mywild.wildguide.framework.error.ForbiddenException;
 import mywild.wildguide.framework.security.jwt.TokenService;
 import mywild.wildguide.framework.security.jwt.TokenType;
@@ -14,6 +15,7 @@ import mywild.wildguide.user.data.UserEntity;
 import mywild.wildguide.user.data.UserRepository;
 import mywild.wildguide.user.web.Tokens;
 import mywild.wildguide.user.web.User;
+import mywild.wildguide.user.web.UserInfo;
 import mywild.wildguide.user.web.UserLogin;
 
 @Validated
@@ -60,6 +62,17 @@ public class UserService {
             userEntity.getUsername(),
             tokenService.generateToken(TokenType.ACCESS, userEntity),
             tokenService.generateToken(TokenType.REFRESH, userEntity));
+    }
+
+    public UserInfo findUserInfo(@Valid @NotEmpty String username) {
+        Optional<UserEntity> foundEntity = repo.findByUsername(username.trim().toLowerCase());
+        if (foundEntity.isPresent()) {
+            return UserInfo.builder()
+                .id(foundEntity.get().getId())
+                .username(foundEntity.get().getUsername())
+                .build();
+        }
+        return new UserInfo(-1, "????");
     }
 
     /**

@@ -13,6 +13,7 @@ import mywild.wildguide.framework.error.ForbiddenException;
 import mywild.wildguide.framework.error.NotFoundException;
 import mywild.wildguide.framework.web.Paged;
 import mywild.wildguide.guide.data.GuideEntity;
+import mywild.wildguide.guide.data.GuideLinkedUser;
 import mywild.wildguide.guide.data.GuideMemberLink;
 import mywild.wildguide.guide.data.GuideMemberLinkRepository;
 import mywild.wildguide.guide.data.GuideOwnerLink;
@@ -88,7 +89,7 @@ public class GuideService {
         repoGuide.delete(entity);
     }
 
-    public List<Long> findGuideOwners(long guideId) {
+    public List<GuideLinkedUser> findGuideOwners(long guideId) {
         return repoGuideOwner.findAllByGuide(guideId);
     }
 
@@ -115,7 +116,7 @@ public class GuideService {
         return false;
     }
 
-    public List<Long> findGuideMembers(long guideId) {
+    public List<GuideLinkedUser> findGuideMembers(long guideId) {
         return repoGuideMember.findAllByGuide(guideId);
     }
 

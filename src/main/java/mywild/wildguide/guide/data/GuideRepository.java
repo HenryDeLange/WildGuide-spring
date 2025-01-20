@@ -10,8 +10,8 @@ public interface GuideRepository extends CrudRepository<GuideEntity, Long> {
 
     static final String FIND_GUIDES =
         "FROM \"guides\" g "
-        + "LEFT JOIN \"guide_owners\" go ON g.id = go.guide_id "
-        + "LEFT JOIN \"guide_members\" gm ON g.id = gm.guide_id "
+        + "LEFT JOIN \"guide_owners\" go ON g.id = go.guide_id AND go.user_id = :ownerId "
+        + "LEFT JOIN \"guide_members\" gm ON g.id = gm.guide_id AND gm.user_id = :memberId "
         + "WHERE g.visibility = :visibility "
         + "OR go.user_id = :ownerId "
         + "OR gm.user_id = :memberId";

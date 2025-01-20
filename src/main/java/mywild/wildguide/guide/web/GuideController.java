@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import mywild.wildguide.framework.security.jwt.JwtUtils;
 import mywild.wildguide.framework.web.Paged;
+import mywild.wildguide.guide.data.GuideLinkedUser;
 import mywild.wildguide.guide.logic.GuideService;
 
 @Tag(name = "Guides", description = "Manage Guides.")
@@ -83,7 +84,7 @@ public class GuideController {
 
     @Operation(summary = "Find the Owners for a specific Guide.")
     @GetMapping("/guides/{guideId}/owners")
-    public List<Long> findGuideOwners(
+    public List<GuideLinkedUser> findGuideOwners(
         @PathVariable long guideId
     ) {
         return service.findGuideOwners(
@@ -118,7 +119,7 @@ public class GuideController {
 
     @Operation(summary = "Find the Members for a specific Guide.")
     @GetMapping("/guides/{guideId}/members")
-    public List<Long> findGuideMembers(
+    public List<GuideLinkedUser> findGuideMembers(
         @PathVariable long guideId
     ) {
         return service.findGuideMembers(
