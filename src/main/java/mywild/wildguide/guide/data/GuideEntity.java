@@ -25,6 +25,9 @@ public class GuideEntity extends BaseEntity {
     @Size(min = 4, max = 128)
     private String name;
 
+    @Size(max = 256)
+    private String summary;
+
     private String description;
 
     @NotNull

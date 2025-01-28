@@ -34,6 +34,7 @@ public class EntryEntity extends BaseEntity {
     @NotNull
     private ScientificRank scientificRank;
 
+    @Size(max = 256)
     private String summary;
 
     private String description;

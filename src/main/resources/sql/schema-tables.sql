@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 CREATE TABLE IF NOT EXISTS "guides" (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(128) NOT NULL UNIQUE,
+    summary VARCHAR(256),
     description TEXT,
     visibility VARCHAR(12) NOT NULL,
     inaturalist_criteria VARCHAR(512),
@@ -55,7 +56,7 @@ CREATE TABLE IF NOT EXISTS "guide_entries" (
     name VARCHAR(128) NOT NULL,
     scientific_name VARCHAR(128) NOT NULL,
     scientific_rank VARCHAR(24) NOT NULL,
-    summary TEXT,
+    summary VARCHAR(256),
     description TEXT,
     inaturalist_taxon BIGINT,
     created_by BIGINT,
