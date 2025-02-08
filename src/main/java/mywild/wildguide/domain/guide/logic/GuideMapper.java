@@ -1,13 +1,13 @@
-package mywild.wildguide.guide.logic;
+package mywild.wildguide.domain.guide.logic;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import mywild.wildguide.framework.logic.BaseMapper;
-import mywild.wildguide.guide.data.GuideEntity;
-import mywild.wildguide.guide.web.Guide;
-import mywild.wildguide.guide.web.GuideBase;
+import mywild.wildguide.domain.guide.data.GuideEntity;
+import mywild.wildguide.domain.guide.web.Guide;
+import mywild.wildguide.domain.guide.web.GuideBase;
 
 @Mapper
 public interface GuideMapper extends BaseMapper {

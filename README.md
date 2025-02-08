@@ -1,8 +1,8 @@
 # TODOs
-
 - TODO: Can the Maven build generate a swagger yml file to be committed?
 - TODO: Setup the Docker image build
 - TODO: Translate "know/expected" error messages from AbstractAppException based on lang from header
+- TODO: Link a searchable/filterable list of tags/categories to an Entry (and maybe even guide?)
 
 ---
 

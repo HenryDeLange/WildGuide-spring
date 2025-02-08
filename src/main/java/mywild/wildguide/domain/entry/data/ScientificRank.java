@@ -1,4 +1,4 @@
-package mywild.wildguide.guide_entry.data;
+package mywild.wildguide.domain.entry.data;
 
 public enum ScientificRank {
 

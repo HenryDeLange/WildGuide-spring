@@ -1,4 +1,4 @@
-package mywild.wildguide.guide_entry.web;
+package mywild.wildguide.domain.guide.web;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,12 +14,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Entry extends EntryBase {
+public class Guide extends GuideBase {
 
     @NotNull
     private long id;
-
-    @NotNull
-    private long guideId;
 
 }

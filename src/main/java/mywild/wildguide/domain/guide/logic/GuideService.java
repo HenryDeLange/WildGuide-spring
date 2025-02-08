@@ -1,4 +1,4 @@
-package mywild.wildguide.guide.logic;
+package mywild.wildguide.domain.guide.logic;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,21 +8,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
+import mywild.wildguide.domain.entry.data.EntryRepository;
 import mywild.wildguide.framework.error.BadRequestException;
 import mywild.wildguide.framework.error.ForbiddenException;
 import mywild.wildguide.framework.error.NotFoundException;
 import mywild.wildguide.framework.web.Paged;
-import mywild.wildguide.guide.data.GuideEntity;
-import mywild.wildguide.guide.data.GuideLinkedUser;
-import mywild.wildguide.guide.data.GuideMemberLink;
-import mywild.wildguide.guide.data.GuideMemberLinkRepository;
-import mywild.wildguide.guide.data.GuideOwnerLink;
-import mywild.wildguide.guide.data.GuideOwnerLinkRepository;
-import mywild.wildguide.guide.data.GuideRepository;
-import mywild.wildguide.guide.data.GuideVisibilityType;
-import mywild.wildguide.guide.web.Guide;
-import mywild.wildguide.guide.web.GuideBase;
-import mywild.wildguide.guide_entry.data.EntryRepository;
+import mywild.wildguide.domain.guide.data.GuideEntity;
+import mywild.wildguide.domain.guide.data.GuideLinkedUser;
+import mywild.wildguide.domain.guide.data.GuideMemberLink;
+import mywild.wildguide.domain.guide.data.GuideMemberLinkRepository;
+import mywild.wildguide.domain.guide.data.GuideOwnerLink;
+import mywild.wildguide.domain.guide.data.GuideOwnerLinkRepository;
+import mywild.wildguide.domain.guide.data.GuideRepository;
+import mywild.wildguide.domain.guide.data.GuideVisibilityType;
+import mywild.wildguide.domain.guide.web.Guide;
+import mywild.wildguide.domain.guide.web.GuideBase;
 
 @Validated
 @Service
@@ -43,11 +43,11 @@ public class GuideService {
     @Autowired
     private EntryRepository repoEntry;
 
-    public @Valid Paged<Guide> findGuides(long userId, int page) {
+    public @Valid Paged<Guide> findGuides(long userId, int page, String name) {
         int totalCount = repoGuide.countByVisibilityOrOwnerOrMember(
-            GuideVisibilityType.PUBLIC, userId, userId);
+            GuideVisibilityType.PUBLIC, userId, userId, name);
         List<GuideEntity> entities = repoGuide.findByVisibilityOrOwnerOrMember(
-            GuideVisibilityType.PUBLIC, userId, userId, pageSize, page * pageSize);
+            GuideVisibilityType.PUBLIC, userId, userId, name, pageSize, page * pageSize);
         return new Paged<>(
             page, pageSize, totalCount,
             entities.stream().map(GuideMapper.INSTANCE::entityToDto).toList());

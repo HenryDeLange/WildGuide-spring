@@ -1,4 +1,4 @@
-package mywild.wildguide.guide.data;
+package mywild.wildguide.domain.guide.web;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import mywild.wildguide.domain.guide.data.GuideVisibilityType;
 
 @ToString(callSuper = true)
 @Getter
@@ -16,13 +17,20 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class GuideLinkedUser {
+public class GuideBase {
+
+    @NotBlank
+    @Size(min = 4, max = 128)
+    private String name;
+
+    @Size(max = 256)
+    private String summary;
+
+    private String description;
 
     @NotNull
-    private long userId;
-    
-    @NotBlank
-    @Size(min = 4, max = 64)
-    private String username;
+    private GuideVisibilityType visibility;
+
+    private String inaturalistCriteria;
 
 }

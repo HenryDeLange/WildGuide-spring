@@ -1,4 +1,4 @@
-package mywild.wildguide.guide.data;
+package mywild.wildguide.domain.guide.data;
 
 import org.springframework.data.relational.core.mapping.Table;
 import lombok.AllArgsConstructor;

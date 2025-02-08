@@ -1,4 +1,4 @@
-package mywild.wildguide.guide_entry.data;
+package mywild.wildguide.domain.entry.data;
 
 import java.util.List;
 import org.springframework.data.jdbc.repository.query.Modifying;

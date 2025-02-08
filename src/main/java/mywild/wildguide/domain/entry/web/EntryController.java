@@ -1,4 +1,4 @@
-package mywild.wildguide.guide_entry.web;
+package mywild.wildguide.domain.entry.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import mywild.wildguide.domain.entry.logic.EntryService;
 import mywild.wildguide.framework.security.jwt.JwtUtils;
 import mywild.wildguide.framework.web.Paged;
-import mywild.wildguide.guide_entry.logic.EntryService;
 
 @Tag(name = "Entries", description = "Manage Guide Entries.")
 @RestController

@@ -1,4 +1,4 @@
-package mywild.wildguide.guide_entry.data;
+package mywild.wildguide.domain.guide.data;
 
 import org.springframework.data.relational.core.mapping.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -18,27 +18,21 @@ import mywild.wildguide.framework.data.BaseEntity;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("guide_entries")
-public class EntryEntity extends BaseEntity {
-
-    private long guideId;
+@Table("guides")
+public class GuideEntity extends BaseEntity {
 
     @NotBlank
-    @Size(min = 1, max = 128)
+    @Size(min = 4, max = 128)
     private String name;
-
-    @NotBlank
-    @Size(min = 3, max = 256)
-    private String scientificName;
-
-    @NotNull
-    private ScientificRank scientificRank;
 
     @Size(max = 256)
     private String summary;
 
     private String description;
 
-    private Long inaturalistTaxon;
+    @NotNull
+    private GuideVisibilityType visibility;
+
+    private String inaturalistCriteria;
 
 }

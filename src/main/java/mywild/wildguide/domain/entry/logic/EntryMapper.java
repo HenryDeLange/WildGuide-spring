@@ -1,13 +1,13 @@
-package mywild.wildguide.guide_entry.logic;
+package mywild.wildguide.domain.entry.logic;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
+import mywild.wildguide.domain.entry.data.EntryEntity;
+import mywild.wildguide.domain.entry.web.Entry;
+import mywild.wildguide.domain.entry.web.EntryBase;
 import mywild.wildguide.framework.logic.BaseMapper;
-import mywild.wildguide.guide_entry.data.EntryEntity;
-import mywild.wildguide.guide_entry.web.Entry;
-import mywild.wildguide.guide_entry.web.EntryBase;
 
 @Mapper
 public interface EntryMapper extends BaseMapper {

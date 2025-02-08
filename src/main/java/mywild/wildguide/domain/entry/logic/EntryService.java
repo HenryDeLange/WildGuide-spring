@@ -1,4 +1,4 @@
-package mywild.wildguide.guide_entry.logic;
+package mywild.wildguide.domain.entry.logic;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,18 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
+import mywild.wildguide.domain.entry.data.EntryEntity;
+import mywild.wildguide.domain.entry.data.EntryRepository;
+import mywild.wildguide.domain.entry.web.Entry;
+import mywild.wildguide.domain.entry.web.EntryBase;
 import mywild.wildguide.framework.error.ForbiddenException;
 import mywild.wildguide.framework.error.NotFoundException;
 import mywild.wildguide.framework.web.Paged;
-import mywild.wildguide.guide.data.GuideEntity;
-import mywild.wildguide.guide.data.GuideMemberLinkRepository;
-import mywild.wildguide.guide.data.GuideOwnerLinkRepository;
-import mywild.wildguide.guide.data.GuideRepository;
-import mywild.wildguide.guide.data.GuideVisibilityType;
-import mywild.wildguide.guide_entry.data.EntryEntity;
-import mywild.wildguide.guide_entry.data.EntryRepository;
-import mywild.wildguide.guide_entry.web.Entry;
-import mywild.wildguide.guide_entry.web.EntryBase;
+import mywild.wildguide.domain.guide.data.GuideEntity;
+import mywild.wildguide.domain.guide.data.GuideMemberLinkRepository;
+import mywild.wildguide.domain.guide.data.GuideOwnerLinkRepository;
+import mywild.wildguide.domain.guide.data.GuideRepository;
+import mywild.wildguide.domain.guide.data.GuideVisibilityType;
 
 @Validated
 @Service

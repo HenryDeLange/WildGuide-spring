@@ -1,13 +1,14 @@
-package mywild.wildguide.guide.data;
+package mywild.wildguide.domain.guide.data;
 
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import mywild.wildguide.framework.data.BaseEntity;
 
 @ToString(callSuper = true)
 @Getter
@@ -15,11 +16,13 @@ import mywild.wildguide.framework.data.BaseEntity;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("guide_members")
-public class GuideMemberLink extends BaseEntity {
+public class GuideLinkedUser {
 
-    private long guideId;
-
+    @NotNull
     private long userId;
+    
+    @NotBlank
+    @Size(min = 4, max = 64)
+    private String username;
 
 }

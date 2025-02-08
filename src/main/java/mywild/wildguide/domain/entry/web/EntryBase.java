@@ -1,4 +1,4 @@
-package mywild.wildguide.guide_entry.web;
+package mywild.wildguide.domain.entry.web;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import mywild.wildguide.guide_entry.data.ScientificRank;
+import mywild.wildguide.domain.entry.data.ScientificRank;
 
 @ToString(callSuper = true)
 @Getter

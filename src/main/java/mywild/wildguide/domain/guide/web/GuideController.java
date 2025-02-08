@@ -1,4 +1,4 @@
-package mywild.wildguide.guide.web;
+package mywild.wildguide.domain.guide.web;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import mywild.wildguide.framework.security.jwt.JwtUtils;
 import mywild.wildguide.framework.web.Paged;
-import mywild.wildguide.guide.data.GuideLinkedUser;
-import mywild.wildguide.guide.logic.GuideService;
+import mywild.wildguide.domain.guide.data.GuideLinkedUser;
+import mywild.wildguide.domain.guide.logic.GuideService;
 
 @Tag(name = "Guides", description = "Manage Guides.")
 @RestController
@@ -29,11 +29,13 @@ public class GuideController {
     @GetMapping("/guides")
     public Paged<Guide> findGuides(
         JwtAuthenticationToken jwtToken,
-        @RequestParam(defaultValue = "0") int page
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(required = false) String name
     ) {
         return service.findGuides(
             JwtUtils.getUserIdFromJwt(jwtToken),
-            page);
+            page,
+            name);
     }
 
     @Operation(summary = "Find a specific Guide associated with the User (owner, member or public).")
