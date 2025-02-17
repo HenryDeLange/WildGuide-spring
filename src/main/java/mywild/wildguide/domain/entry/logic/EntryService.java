@@ -40,12 +40,12 @@ public class EntryService {
     @Autowired
     private GuideMemberLinkRepository repoGuideMember;
 
-    public @Valid Paged<Entry> findEntries(long userId, long guideId, int page) {
+    public @Valid Paged<Entry> findEntries(long userId, long guideId, int page, String name) {
         checkUserHasGuideAccess(userId, guideId);
         int totalCount = repoEntry.countByGuide(
-            guideId);
+            guideId, name);
         List<EntryEntity> entities = repoEntry.findByGuide(
-            guideId, pageSize, page * pageSize);
+            guideId, name, pageSize, page * pageSize);
         return new Paged<>(
             page, pageSize, totalCount,
             entities.stream().map(EntryMapper.INSTANCE::entityToDto).toList());

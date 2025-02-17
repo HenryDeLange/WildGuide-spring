@@ -28,12 +28,14 @@ public class EntryController {
     public Paged<Entry> findEntries(
         JwtAuthenticationToken jwtToken,
         @PathVariable long guideId,
-        @RequestParam(defaultValue = "0") int page
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(required = false) String name
     ) {
         return service.findEntries(
             JwtUtils.getUserIdFromJwt(jwtToken),
             guideId,
-            page);
+            page,
+            name);
     }
 
     @Operation(summary = "Find a specific Entry associated with the specified Guide.")

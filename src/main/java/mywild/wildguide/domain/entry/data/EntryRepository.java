@@ -10,19 +10,25 @@ import org.springframework.stereotype.Repository;
 public interface EntryRepository extends CrudRepository<EntryEntity, Long> {
 
     static final String FIND_ENTRIES =
-        "FROM \"guide_entries\" ge " 
-        + "WHERE ge.guide_id = :guideId";
+        "FROM \"guide_entries\" ge "
+        + "WHERE ("
+        + "ge.guide_id = :guideId "
+        + ") AND ("
+        + ":name IS NULL "
+        + "OR LOWER(ge.name) LIKE CONCAT('%', LOWER(:name), '%')"
+        + ")";
 
     @Query("SELECT ge.* " + FIND_ENTRIES + " ORDER BY LOWER(ge.name) ASC LIMIT :limit OFFSET :offset")
     List<EntryEntity> findByGuide(
-        long guideId, int limit, int offset);
+        long guideId, String name, int limit, int offset);
 
     @Query("SELECT COUNT(ge.id) " + FIND_ENTRIES)
     int countByGuide(
-        long guideId);
+        long guideId, String name);
 
     @Modifying
     @Query("DELETE FROM \"guide_entries\" WHERE guide_id = :guideId")
-    void deleteGuideEntries(long guideId);
+    void deleteGuideEntries(
+        long guideId);
 
 }
