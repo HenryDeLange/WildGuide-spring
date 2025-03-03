@@ -1,8 +1,8 @@
 # TODOs
-- TODO: Can the Maven build generate a swagger yml file to be committed?
 - TODO: Setup the Docker image build
 - TODO: Translate "know/expected" error messages from AbstractAppException based on lang from header
 - TODO: Link a searchable/filterable list of tags/categories to an Entry (and maybe even guide?)
+- TODO: Combine Owner into Member, and add a new field MembershipType instead: OWNER, CONTRIBUTOR (can edit but not delete), VIEWER
 
 ---
 
@@ -11,9 +11,13 @@
 ![App Version](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Fraw.githubusercontent.com%2FHenryDeLange%2FWildGuide-spring%2Fmain%2Fpom.xml&query=%2F*%5Blocal-name()%3D'project'%5D%2F*%5Blocal-name()%3D'version'%5D&label=version)
 ![GitHub License](https://img.shields.io/github/license/HenryDeLange/WildGuide-spring)
 
-The Spring (Java) backend for WildGuide.
+This repository is for the WildGuide backend (Spring, Java). Also see the related [WildGuide frontend](https://github.com/HenryDeLange/WildGuide-react).
 
 ## Development
+
+### API
+
+See the [swagger.json](./swagger.json) file.
 
 ### Build
 
