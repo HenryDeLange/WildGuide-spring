@@ -3,7 +3,7 @@
 FROM bellsoft/liberica-runtime-container:jdk-23-musl AS builder
 WORKDIR /app
 ADD ./ /app/
-RUN ./mvnw clean package
+RUN chmod +x ./mvnw && ./mvnw clean package
 
 FROM bellsoft/liberica-runtime-container:jre-23-slim-musl
 WORKDIR /app
