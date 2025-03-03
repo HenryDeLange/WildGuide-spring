@@ -26,4 +26,4 @@ jobs:
               with:
                 context: .
                 push: true
-                tags: ghcr.io/${{ toLower(github.repository) }}/wildguide:latest
+                tags: ghcr.io/henrydelange/wildguide-spring/wildguide:latest
