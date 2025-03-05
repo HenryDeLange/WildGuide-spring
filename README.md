@@ -22,7 +22,7 @@ See the [swagger.json](./swagger.json) file.
 
 ![Top Language](https://img.shields.io/github/languages/top/HenryDeLange/WildGuide-spring)
 ![Maven Build](https://img.shields.io/github/actions/workflow/status/HenryDeLange/WildGuide-spring/spring-source-build.yml?label=maven%20build)
-![Docker Deploy](https://img.shields.io/github/actions/workflow/status/HenryDeLange/WildGuide-spring/spring-docker-image-build.yml?label=docker%20image)
+![Docker Deploy](https://img.shields.io/github/actions/workflow/status/HenryDeLange/WildGuide-spring/spring-docker-image-build.yml?label=docker%20image%20deploy)
 
 This project written in `Java 23` using `Spring Boot`, and `Maven` to build.
 
