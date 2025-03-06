@@ -9,10 +9,6 @@ This repository is for the WildGuide backend (Spring, Java). Also see the relate
 
 ## Development
 
-### API
-
-See the [swagger.json](./swagger.json) file.
-
 ### Build
 
 ![Top Language](https://img.shields.io/github/languages/top/HenryDeLange/WildGuide-spring)
