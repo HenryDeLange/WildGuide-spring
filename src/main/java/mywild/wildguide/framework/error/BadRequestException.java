@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequestException extends AbstractAppException {
 
-    public BadRequestException(String message) {
-        super(message);
+    public BadRequestException(String messageKey) {
+        super(messageKey);
     }
 
-    public BadRequestException(String message, Throwable cause) {
-        super(message, cause);
+    public BadRequestException(String messageKey, Throwable cause) {
+        super(messageKey, cause);
     }
 
 }

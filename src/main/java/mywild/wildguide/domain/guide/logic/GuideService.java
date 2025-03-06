@@ -58,7 +58,7 @@ public class GuideService {
         if (entity.getVisibility() == GuideVisibilityType.PRIVATE
                 && !repoGuideOwner.existsByGuideIdAndUserId(guideId, userId)
                 && !repoGuideMember.existsByGuideIdAndUserId(guideId, userId)) {
-            throw new ForbiddenException("Guide not accessible by this User!");
+            throw new ForbiddenException("guide.not-accessible");
         }
         return GuideMapper.INSTANCE.entityToDto(entity);
     }
@@ -108,7 +108,7 @@ public class GuideService {
         checkUserIsGuideOwner(userId, guideId);
         if (repoGuideOwner.existsByGuideIdAndUserId(guideId, ownerId)) {
             if (repoGuideOwner.findAllByGuide(guideId).size() == 1) {
-                throw new BadRequestException("The Guide must have at least one Owner!");
+                throw new BadRequestException("guide.one-owner");
             }
             repoGuideOwner.deleteByGuideIdAndUserId(guideId, ownerId);
             return true;
@@ -143,7 +143,7 @@ public class GuideService {
     private GuideEntity findGuide(long userId, long guideId, boolean checkOwner) {
         Optional<GuideEntity> foundEntity = repoGuide.findById(guideId);
         if (!foundEntity.isPresent()) {
-            throw new NotFoundException("Guide not found!");
+            throw new NotFoundException("guide.not-found");
         }
         GuideEntity entity = foundEntity.get();
         if (checkOwner) {
@@ -155,7 +155,7 @@ public class GuideService {
     private void checkUserIsGuideOwner(long userId, long guideId) {
         boolean isUserAnOwner = repoGuideOwner.existsByGuideIdAndUserId(guideId, userId);
         if (!isUserAnOwner) {
-            throw new ForbiddenException("Not a Guide Owner!");
+            throw new ForbiddenException("guide.not-owner");
         }
     }
 

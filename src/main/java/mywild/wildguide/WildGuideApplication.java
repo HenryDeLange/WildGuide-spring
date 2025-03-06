@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
@@ -36,7 +37,8 @@ import lombok.extern.slf4j.Slf4j;
         RabbitAutoConfiguration.class,
         MongoReactiveAutoConfiguration.class,
         CassandraAutoConfiguration.class,
-        Neo4jAutoConfiguration.class
+        Neo4jAutoConfiguration.class,
+        ErrorMvcAutoConfiguration.class
     }
 )
 @Slf4j
@@ -63,7 +65,7 @@ public class WildGuideApplication {
         @Override
         public void run(ApplicationArguments args) throws Exception {
             if (isRunning) {
-                log.info(">>> READY <<<");
+                log.info("------>>> READY <<<------");
                 log.info("http://localhost:{}", environment.getProperty("local.server.port"));
                 if (devMode) {
                     log.info("http://localhost:{}{}", environment.getProperty("local.server.port"), h2Console);

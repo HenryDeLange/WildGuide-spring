@@ -33,5 +33,6 @@ build/
 
 ### Project ###
 /data
+/logs
 /keys
 .env

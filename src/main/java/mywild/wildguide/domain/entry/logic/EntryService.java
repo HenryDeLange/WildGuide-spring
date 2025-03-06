@@ -55,7 +55,7 @@ public class EntryService {
         checkUserHasGuideAccess(userId, guideId);
         Optional<EntryEntity> foundEntity = repoEntry.findById(entryId);
         if (!foundEntity.isPresent()) {
-            throw new NotFoundException("Entry not found!");
+            throw new NotFoundException("entry.not-found");
         }
         return EntryMapper.INSTANCE.entityToDto(foundEntity.get());
     }
@@ -73,7 +73,7 @@ public class EntryService {
         checkUserHasGuideAccess(userId, guideId);
         Optional<EntryEntity> foundEntity = repoEntry.findById(entryId);
         if (!foundEntity.isPresent()) {
-            throw new NotFoundException("Entry not found!");
+            throw new NotFoundException("entry.not-found");
         }
         return EntryMapper.INSTANCE.entityToDto(
             repoEntry.save(EntryMapper.INSTANCE.dtoToExistingEntity(
@@ -89,13 +89,13 @@ public class EntryService {
     private void checkUserHasGuideAccess(long userId, long guideId) {
         Optional<GuideEntity> foundEntity = repoGuide.findById(guideId);
         if (!foundEntity.isPresent()) {
-            throw new NotFoundException("Guide not found!");
+            throw new NotFoundException("guide.not-found");
         }
         GuideEntity entity = foundEntity.get();
         if (entity.getVisibility() == GuideVisibilityType.PRIVATE
                 && !repoGuideOwner.existsByGuideIdAndUserId(guideId, userId)
                 && !repoGuideMember.existsByGuideIdAndUserId(guideId, userId)) {
-            throw new ForbiddenException("Entries from the related Guide are not accessible by this User!");
+            throw new ForbiddenException("entry.not-accessible");
         }
     }
 

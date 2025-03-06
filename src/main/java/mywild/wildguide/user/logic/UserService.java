@@ -46,7 +46,7 @@ public class UserService {
     public Tokens login(@Valid UserLogin login) {
         Optional<UserEntity> foundEntity = repo.findByUsername(login.getUsername().toLowerCase());
         if (!foundEntity.isPresent() || !passwordEncoder.matches(login.getPassword(), foundEntity.get().getPassword()))
-            throw new ForbiddenException("Incorrect User credentials!");
+            throw new ForbiddenException("user.incorrect");
         UserEntity entity = foundEntity.get();
         return new Tokens(
             entity.getId(),
@@ -80,10 +80,10 @@ public class UserService {
      */
     private UserEntity getValidUser(long userId) {
         if (userId <= 0)
-            throw new ForbiddenException("Incorrect User ID!");
+            throw new ForbiddenException("user.not-found");
         Optional<UserEntity> userEntity = repo.findById(userId);
         if (!userEntity.isPresent())
-            throw new ForbiddenException("Incorrect User ID!");
+            throw new ForbiddenException("user.not-found");
         return userEntity.get();
     }
 

@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.FORBIDDEN)
 public class ForbiddenException extends AbstractAppException {
 
-    public ForbiddenException(String message) {
-        super(message);
+    public ForbiddenException(String messageKey) {
+        super(messageKey);
     }
 
-    public ForbiddenException(String message, Throwable cause) {
-        super(message, cause);
+    public ForbiddenException(String messageKey, Throwable cause) {
+        super(messageKey, cause);
     }
 
 }
