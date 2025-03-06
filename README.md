@@ -5,7 +5,7 @@
 
 This repository is for the WildGuide backend (Spring, Java). Also see the related [WildGuide frontend](https://github.com/HenryDeLange/WildGuide-react).
 
-[Live API](https://api.wildguide.mywild.co.za/swagger-ui/index.html)
+[🦉 Live API](https://api.wildguide.mywild.co.za/swagger-ui/index.html)
 
 ## Development
 
@@ -69,6 +69,20 @@ logging.level.org.springframework.jdbc.datasource=DEBUG
 
 #### Properties
 
-See the [application.yml](./src/main/resources/application.yml) file.
+See the [application.yml](./src/main/resources/application.yml) file. (Properties can be overwritten using environment variables.)
 
-These properties can be overwritten using environment variables.
+## Production
+
+### Setup
+
+Create a Docker container using the `mywild/wildguide:latest` image.
+
+Configure the environment variables, as defined above in the `.env` file, for the container.
+
+Attach volumes for the `/app/data` and `/app/logs` folders.
+
+### Deploy
+
+Manually run the `Build and Publish Spring Docker Image` GitHub Action in order to build and publish the new (_latest_) Docker [image](https://hub.docker.com/repository/docker/mywild/wildguide).
+
+Switch the container over to the new image. _(The MyWild production environment will automatically switch over to the latest image.)_
