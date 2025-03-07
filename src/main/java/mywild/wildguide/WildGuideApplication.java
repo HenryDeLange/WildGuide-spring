@@ -68,6 +68,7 @@ public class WildGuideApplication {
                 log.info("------>>> READY <<<------");
                 log.info("http://localhost:{}", environment.getProperty("local.server.port"));
                 if (devMode) {
+                    log.info("http://localhost:{}/swagger-ui/index.html", environment.getProperty("local.server.port"));
                     log.info("http://localhost:{}{}", environment.getProperty("local.server.port"), h2Console);
                 }
             }

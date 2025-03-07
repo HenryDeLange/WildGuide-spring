@@ -9,15 +9,9 @@ This repository is for the WildGuide backend (Spring, Java). Also see the relate
 
 ## Development
 
-### Build
-
 ![Top Language](https://img.shields.io/github/languages/top/HenryDeLange/WildGuide-spring)
 ![Maven Build](https://img.shields.io/github/actions/workflow/status/HenryDeLange/WildGuide-spring/spring-source-build.yml?label=maven%20build)
 ![Docker Deploy](https://img.shields.io/github/actions/workflow/status/HenryDeLange/WildGuide-spring/spring-docker-image-build.yml?label=docker%20image%20deploy)
-
-This project written in `Java 23` using `Spring Boot`, and `Maven` to build.
-
-`mvn clean verify -P prod`
 
 ### Setup
 
@@ -71,6 +65,12 @@ logging.level.org.springframework.jdbc.datasource=DEBUG
 
 See the [application.yml](./src/main/resources/application.yml) file. (Properties can be overwritten using environment variables.)
 
+### Build
+
+This project written in `Java 23` using `Spring Boot`, and `Maven` to build.
+
+`mvn clean verify -P prod`
+
 ## Production
 
 ### Setup
@@ -85,4 +85,4 @@ Attach volumes for the `/app/data` and `/app/logs` folders.
 
 Manually run the `Build and Publish Spring Docker Image` GitHub Action in order to build and publish the new (_latest_) Docker [image](https://hub.docker.com/repository/docker/mywild/wildguide).
 
-Switch the container over to the new image. _(The MyWild production environment will automatically switch over to the latest image.)_
+Switch the container over to the new image. _(The MyWild production environment on Azure will automatically switch over to the latest image.)_
