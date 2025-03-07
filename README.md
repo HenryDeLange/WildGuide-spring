@@ -83,6 +83,6 @@ Attach volumes for the `/app/data` and `/app/logs` folders.
 
 ### Deploy
 
-Manually run the `Build and Publish Spring Docker Image` GitHub Action in order to build and publish the new (_latest_) Docker [image](https://hub.docker.com/repository/docker/mywild/wildguide).
+Manually run the [Build and Publish Spring Docker Image](https://github.com/HenryDeLange/WildGuide-spring/actions/workflows/spring-docker-image-build.yml) GitHub Action in order to build and publish the new (_latest_) Docker [image](https://hub.docker.com/repository/docker/mywild/wildguide).
 
 Switch the container over to the new image. _(The MyWild production environment on Azure will automatically switch over to the latest image.)_
