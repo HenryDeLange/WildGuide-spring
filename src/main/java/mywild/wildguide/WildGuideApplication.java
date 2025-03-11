@@ -21,9 +21,11 @@ import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConf
 import org.springframework.context.SmartLifecycle;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @SpringBootApplication(
     scanBasePackageClasses = WildGuideApplication.class,
     exclude = {
@@ -41,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
         ErrorMvcAutoConfiguration.class
     }
 )
-@Slf4j
+@EnableScheduling
 public class WildGuideApplication {
 
     public static void main(String[] args) {
