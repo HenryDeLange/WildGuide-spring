@@ -6,9 +6,11 @@ spring:
     jmx:
         enabled: false
     lifecycle:
-        timeout-per-shutdown-phase: 30s
+        timeout-per-shutdown-phase: 25s
     config:
-        import: optional:file:./.env[.properties]
+        import: 
+            - optional:file:./.env.production[.properties]
+            - optional:file:./.env.local[.properties]
     sql:
         init:
             mode: always
@@ -64,7 +66,7 @@ mywild:
     app:
         name: @project.name@
         version: @project.version@
-        devMode: false
+        dev-mode: false
     jwt:
         issuer: MyWild
         subject: WildGuide
@@ -75,6 +77,7 @@ mywild:
         private: ${PRIVATE_KEY}
         public: ${PUBLIC_KEY}
     cors: ${CORS}
+    api-path: api/v1
     wildguide:
         concurrent-users-limit: 100
         user-rate-limit: 75

@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 public abstract class BaseEntity {
 
     @Id
-    private long id;
+    private Long id;
 
     @CreatedBy
     private String createdBy;

@@ -15,51 +15,9 @@ This repository is for the WildGuide backend (Spring, Java). Also see the relate
 
 ### Setup
 
-#### Encryption Keys
-
-Use `openssl` to create the necessary keys:
-
-```sh
-mkdir ./keys
-openssl genrsa -out ./keys/private_key.pem 2048
-openssl rsa -in ./keys/private_key.pem -outform PEM -pubout -out ./keys/public_key.pem
-openssl pkcs8 -topk8 -inform PEM -in ./keys/private_key.pem -outform PEM -nocrypt -out ./keys/private_key_pkcs8.pem
-```
-
-(In Windows you can use WSL to execute the commands.)
-
 #### Environment Variables
 
-Create an `.env` file in the root folder containing the following information (use your own values):
-
-```properties
-##################
-#### SECURITY ####
-
-# Set to the environment identifier
-JWT_AUDIENCE=development
-
-# Set to the frontend's URL
-CORS=*
-
-# Use value from private_key_pkcs8.pem (only the base64 key, not the header/footer)
-PRIVATE_KEY=...
-
-# Use value from public_key.pem (only the base64 key, not the header/footer)
-PUBLIC_KEY=...
-
-##########################
-#### DEVELOPMENT ONLY ####
-mywild.app.devMode=true
-mywild.wildguide.page-size=10
-spring.h2.console.enabled=true
-spring.h2.console.path=/h2-console
-logging.level.console=TRACE
-logging.level.mywild=TRACE
-logging.level.org.springframework.security=DEBUG
-logging.level.org.springframework.jdbc.core=DEBUG
-logging.level.org.springframework.jdbc.datasource=DEBUG
-```
+See the [.env.local](./.env.local) file containing development values.
 
 #### Properties
 
@@ -75,11 +33,28 @@ This project written in `Java 23` using `Spring Boot`, and `Maven` to build.
 
 ### Setup
 
+#### Docker Container
 Create a Docker container using the `mywild/wildguide:latest` image.
 
-Configure the environment variables, as defined above in the `.env` file, for the container.
+#### Environment Variables
 
-Attach volumes for the `/app/data` and `/app/logs` folders.
+Configure the environment variables, declared in the [.env.production](./.env.production) file, for the container.
+
+##### Encryption Keys
+
+Use `openssl` to create the necessary keys:
+
+```sh
+mkdir ./keys
+openssl genrsa -out ./keys/private_key.pem 2048
+openssl rsa -in ./keys/private_key.pem -outform PEM -pubout -out ./keys/public_key.pem
+openssl pkcs8 -topk8 -inform PEM -in ./keys/private_key.pem -outform PEM -nocrypt -out ./keys/private_key_pkcs8.pem
+```
+
+(In Windows you can use WSL to execute the commands.)
+
+#### Volumes
+Attach volumes for the `/app/data`, `/app/backups` and `/app/logs` folders.
 
 ### Deploy
 

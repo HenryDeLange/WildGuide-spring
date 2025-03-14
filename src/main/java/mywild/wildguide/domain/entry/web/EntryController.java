@@ -14,11 +14,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import mywild.wildguide.domain.entry.logic.EntryService;
 import mywild.wildguide.framework.security.jwt.JwtUtils;
+import mywild.wildguide.framework.web.BaseController;
 import mywild.wildguide.framework.web.Paged;
 
 @Tag(name = "Entries", description = "Manage Guide Entries.")
 @RestController
-public class EntryController {
+public class EntryController extends BaseController {
 
     @Autowired
     private EntryService service;

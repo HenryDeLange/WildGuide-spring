@@ -10,9 +10,9 @@
     "description": "The application version from Maven."
   },
   {
-    "name": "mywild.app.devMode",
+    "name": "mywild.app.dev-mode",
     "type": "java.lang.Boolean",
-    "description": "Whether the server is in development mode or not (devMode will show additional logs, etc.)."
+    "description": "Whether the server is in development mode or not (dev-mode will show additional logs, etc.)."
   },
   {
     "name": "mywild.jwt.audience",
@@ -53,6 +53,11 @@
     "name": "mywild.cors",
     "type": "java.lang.String",
     "description": "The CORS allowed origins."
+  },
+  {
+    "name": "mywild.api-path",
+    "type": "java.lang.String",
+    "description": "The base URL path for the API."
   },
   {
     "name": "mywild.wildguide.concurrent-users-limit",

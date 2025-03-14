@@ -53,7 +53,7 @@ public class WildGuideApplication {
     @Component
     public class ApplicationLoader implements ApplicationRunner, SmartLifecycle {
 
-        @Value("${mywild.app.devMode}")
+        @Value("${mywild.app.dev-mode}")
         private boolean devMode;
 
         @Value("${spring.h2.console.path}")
@@ -68,9 +68,13 @@ public class WildGuideApplication {
         public void run(ApplicationArguments args) throws Exception {
             if (isRunning) {
                 log.info("------>>> READY <<<------");
-                log.info("http://localhost:{}", environment.getProperty("local.server.port"));
+                log.info("http://localhost:{}{}", 
+                    environment.getProperty("local.server.port"), 
+                    environment.getProperty("server.servlet.context-path", ""));
                 if (devMode) {
-                    log.info("http://localhost:{}/swagger-ui/index.html", environment.getProperty("local.server.port"));
+                    log.info("http://localhost:{}{}/swagger-ui/index.html", 
+                        environment.getProperty("local.server.port"),
+                        environment.getProperty("server.servlet.context-path", ""));
                     log.info("http://localhost:{}{}", environment.getProperty("local.server.port"), h2Console);
                 }
             }

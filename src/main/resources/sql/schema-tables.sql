@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS "guide_owners" (
     last_modified_by BIGINT,
     last_modified_date TIMESTAMP,
     FOREIGN KEY (guide_id) REFERENCES "guides"(id),
-    FOREIGN KEY (user_id) REFERENCES "users"(id)
+    FOREIGN KEY (user_id) REFERENCES "users"(id),
+    UNIQUE (guide_id, user_id)
 );
 
 -- GUIDE MEMBERS
@@ -46,7 +47,8 @@ CREATE TABLE IF NOT EXISTS "guide_members" (
     last_modified_by BIGINT,
     last_modified_date TIMESTAMP,
     FOREIGN KEY (guide_id) REFERENCES "guides"(id),
-    FOREIGN KEY (user_id) REFERENCES "users"(id)
+    FOREIGN KEY (user_id) REFERENCES "users"(id),
+    UNIQUE (guide_id, user_id)
 );
 
 -- GUIDE ENTRIES
@@ -67,4 +69,17 @@ CREATE TABLE IF NOT EXISTS "guide_entries" (
     UNIQUE (guide_id, name),
     UNIQUE (guide_id, scientific_name),
     UNIQUE (guide_id, inaturalist_taxon)
+);
+
+-- STARS
+CREATE TABLE IF NOT EXISTS "guide_stars" (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    guide_id BIGINT NOT NULL,
+    created_by BIGINT,
+    created_date TIMESTAMP,
+    last_modified_by BIGINT,
+    last_modified_date TIMESTAMP,
+    FOREIGN KEY (guide_id) REFERENCES "guides"(id),
+    UNIQUE (user_id, guide_id)
 );

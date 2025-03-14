@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 public class Entry extends EntryBase {
 
     @NotNull
-    private long id;
+    private Long id;
 
     @NotNull
     private long guideId;

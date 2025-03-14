@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 // @EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
-    @Value("${mywild.app.devMode}")
+    @Value("${mywild.app.dev-mode}")
     private boolean devMode;
 
     @Value("${spring.h2.console.path}")
@@ -52,6 +52,9 @@ public class SecurityConfig {
 
     @Value("${mywild.cors}")
     private String cors;
+
+    @Value("${mywild.api-path}")
+    private String apiPath;
 
     @Autowired
     private RSAPublicKey publicKey;
@@ -83,13 +86,13 @@ public class SecurityConfig {
                     .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers("/v3/**").permitAll()
                     // Version Endpoint
-                    .requestMatchers("/version/**").permitAll()
+                    .requestMatchers(apiPath + "/version/**").permitAll()
                     // Auth Endpoints
-                    .requestMatchers("/users/register/**").permitAll()
-                    .requestMatchers("/users/login").permitAll()
-                    .requestMatchers("/users/refresh/**").hasAuthority("SCOPE_refresh")
+                    .requestMatchers(apiPath + "/users/register/**").permitAll()
+                    .requestMatchers(apiPath + "/users/login").permitAll()
+                    .requestMatchers(apiPath + "/users/refresh/**").hasAuthority("SCOPE_refresh")
                     // All other Endpoints
-                    .requestMatchers(HttpMethod.GET, "/guides/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, apiPath + "/guides/**").permitAll()
                     // .anyRequest().authenticated()
                     .anyRequest().hasAuthority("SCOPE_access");
             })

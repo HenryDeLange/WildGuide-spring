@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import mywild.wildguide.framework.security.jwt.JwtUtils;
+import mywild.wildguide.framework.web.BaseController;
 import mywild.wildguide.framework.web.Paged;
 import mywild.wildguide.domain.guide.data.GuideLinkedUser;
 import mywild.wildguide.domain.guide.logic.GuideService;
 
 @Tag(name = "Guides", description = "Manage Guides.")
 @RestController
-public class GuideController {
+public class GuideController extends BaseController {
 
     @Autowired
     private GuideService service;
@@ -152,6 +153,37 @@ public class GuideController {
             JwtUtils.getUserIdFromJwt(jwtToken),
             guideId,
             memberId);
+    }
+
+    @Operation(summary = "Find the Guides with Stars for the active User.")
+    @GetMapping("/guides/stars")
+    public List<Guide> findStarredGuides(
+        JwtAuthenticationToken jwtToken
+    ) {
+        return service.findStarredGuides(
+            JwtUtils.getUserIdFromJwt(jwtToken));
+    }
+
+    @Operation(summary = "Create a Star on a specific Guide for the active User.")
+    @PostMapping("/guides/{guideId}/stars")
+    public boolean createGuideStar(
+        JwtAuthenticationToken jwtToken,
+        @PathVariable long guideId
+    ) {
+        return service.createGuideStar(
+            JwtUtils.getUserIdFromJwt(jwtToken),
+            guideId);
+    }
+
+    @Operation(summary = "Remove a Star from a specific Guide for the active User.")
+    @DeleteMapping("/guides/{guideId}/stars")
+    public boolean deleteGuideStar(
+        JwtAuthenticationToken jwtToken,
+        @PathVariable long guideId
+    ) {
+        return service.deleteGuideStar(
+            JwtUtils.getUserIdFromJwt(jwtToken),
+            guideId);
     }
 
 }

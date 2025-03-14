@@ -1,7 +1,6 @@
 package mywild.wildguide.domain.guide.logic;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -9,24 +8,25 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import mywild.wildguide.domain.entry.data.EntryRepository;
-import mywild.wildguide.framework.error.BadRequestException;
-import mywild.wildguide.framework.error.ForbiddenException;
-import mywild.wildguide.framework.error.NotFoundException;
-import mywild.wildguide.framework.web.Paged;
 import mywild.wildguide.domain.guide.data.GuideEntity;
+import mywild.wildguide.domain.guide.data.GuideEntityExtended;
 import mywild.wildguide.domain.guide.data.GuideLinkedUser;
 import mywild.wildguide.domain.guide.data.GuideMemberLink;
 import mywild.wildguide.domain.guide.data.GuideMemberLinkRepository;
 import mywild.wildguide.domain.guide.data.GuideOwnerLink;
 import mywild.wildguide.domain.guide.data.GuideOwnerLinkRepository;
 import mywild.wildguide.domain.guide.data.GuideRepository;
-import mywild.wildguide.domain.guide.data.GuideVisibilityType;
+import mywild.wildguide.domain.guide.data.GuideStarLink;
+import mywild.wildguide.domain.guide.data.GuideStarLinkRepository;
 import mywild.wildguide.domain.guide.web.Guide;
 import mywild.wildguide.domain.guide.web.GuideBase;
+import mywild.wildguide.domain.utils.DomainService;
+import mywild.wildguide.framework.error.BadRequestException;
+import mywild.wildguide.framework.web.Paged;
 
 @Validated
 @Service
-public class GuideService {
+public class GuideService extends DomainService {
 
     @Value("${mywild.wildguide.page-size}")
     private int pageSize;
@@ -41,25 +41,21 @@ public class GuideService {
     private GuideMemberLinkRepository repoGuideMember;
 
     @Autowired
+    private GuideStarLinkRepository repoGuideStar;
+
+    @Autowired
     private EntryRepository repoEntry;
 
     public @Valid Paged<Guide> findGuides(long userId, int page, String name) {
-        int totalCount = repoGuide.countByVisibilityOrOwnerOrMember(
-            GuideVisibilityType.PUBLIC, userId, userId, name);
-        List<GuideEntity> entities = repoGuide.findByVisibilityOrOwnerOrMember(
-            GuideVisibilityType.PUBLIC, userId, userId, name, pageSize, page * pageSize);
+        int totalCount = repoGuide.countByVisibilityAndName(userId, name);
+        List<GuideEntityExtended> entities = repoGuide.findByVisibilityAndName(userId, name, pageSize, page * pageSize);
         return new Paged<>(
             page, pageSize, totalCount,
             entities.stream().map(GuideMapper.INSTANCE::entityToDto).toList());
     }
 
     public @Valid Guide findGuide(long userId, long guideId) {
-        GuideEntity entity = findGuide(userId, guideId, false);
-        if (entity.getVisibility() == GuideVisibilityType.PRIVATE
-                && !repoGuideOwner.existsByGuideIdAndUserId(guideId, userId)
-                && !repoGuideMember.existsByGuideIdAndUserId(guideId, userId)) {
-            throw new ForbiddenException("guide.not-accessible");
-        }
+        GuideEntityExtended entity = getAccessibleGuide(userId, guideId);
         return GuideMapper.INSTANCE.entityToDto(entity);
     }
 
@@ -74,7 +70,7 @@ public class GuideService {
 
     @Transactional
     public @Valid Guide updateGuide(long userId, long guideId, @Valid GuideBase guideBase) {
-        GuideEntity entity = findGuide(userId, guideId, true);
+        GuideEntity entity = getOwnedGuide(userId, guideId);
         return GuideMapper.INSTANCE.entityToDto(
             repoGuide.save(GuideMapper.INSTANCE.dtoToExistingEntity(
                 entity, guideBase)));
@@ -82,10 +78,12 @@ public class GuideService {
 
     @Transactional
     public void deleteGuide(long userId, long guideId) {
-        GuideEntity entity = findGuide(userId, guideId, true);
+        checkUserHasGuideOwnership(userId, guideId);
+        GuideEntity entity = getOwnedGuide(userId, guideId);
         repoGuideOwner.deleteGuideOwners(guideId);
         repoGuideMember.deleteGuideMembers(guideId);
         repoEntry.deleteGuideEntries(guideId);
+        repoGuideStar.deleteGuideStars(guideId);
         repoGuide.delete(entity);
     }
 
@@ -95,7 +93,7 @@ public class GuideService {
 
     @Transactional
     public boolean ownerJoinGuide(long userId, long guideId, long ownerId) {
-        checkUserIsGuideOwner(userId, guideId);
+        checkUserHasGuideOwnership(userId, guideId);
         if (!repoGuideOwner.existsByGuideIdAndUserId(guideId, ownerId)) {
             repoGuideOwner.save(new GuideOwnerLink(guideId, ownerId));
             return true;
@@ -105,15 +103,32 @@ public class GuideService {
 
     @Transactional
     public boolean ownerLeaveGuide(long userId, long guideId, long ownerId) {
-        checkUserIsGuideOwner(userId, guideId);
+        checkUserHasGuideOwnership(userId, guideId);
         if (repoGuideOwner.existsByGuideIdAndUserId(guideId, ownerId)) {
             if (repoGuideOwner.findAllByGuide(guideId).size() == 1) {
                 throw new BadRequestException("guide.one-owner");
             }
-            repoGuideOwner.deleteByGuideIdAndUserId(guideId, ownerId);
+            repoGuideOwner.deleteByGuideAndUser(guideId, ownerId);
             return true;
         }
         return false;
+    }
+
+    public List<Guide> findStarredGuides(long userId) {
+        List<GuideEntityExtended> entities = repoGuideStar.findStarredGuidesByUser(userId);
+        return entities.stream().map(GuideMapper.INSTANCE::entityToDto).toList();
+    }
+
+    @Transactional
+    public boolean createGuideStar(long userId, long guideId) {
+        repoGuideStar.save(new GuideStarLink(userId, guideId));
+        return true;
+    }
+
+    @Transactional
+    public boolean deleteGuideStar(long userId, long guideId) {
+        repoGuideStar.deleteByUserAndGuide(userId, guideId);
+        return true;
     }
 
     public List<GuideLinkedUser> findGuideMembers(long guideId) {
@@ -122,7 +137,7 @@ public class GuideService {
 
     @Transactional
     public boolean memberJoinGuide(long userId, long guideId, long memberId) {
-        checkUserIsGuideOwner(userId, guideId);
+        checkUserHasGuideOwnership(userId, guideId);
         if (!repoGuideMember.existsByGuideIdAndUserId(guideId, memberId)) {
             repoGuideMember.save(new GuideMemberLink(guideId, memberId));
             return true;
@@ -132,31 +147,22 @@ public class GuideService {
 
     @Transactional
     public boolean memberLeaveGuide(long userId, long guideId, long memberId) {
-        checkUserIsGuideOwner(userId, guideId);
+        checkUserHasGuideOwnership(userId, guideId);
         if (repoGuideMember.existsByGuideIdAndUserId(guideId, memberId)) {
-            repoGuideMember.deleteByGuideIdAndUserId(guideId, memberId);
+            repoGuideMember.deleteByGuideAndUser(guideId, memberId);
             return true;
         }
         return false;
     }
 
-    private GuideEntity findGuide(long userId, long guideId, boolean checkOwner) {
-        Optional<GuideEntity> foundEntity = repoGuide.findById(guideId);
-        if (!foundEntity.isPresent()) {
-            throw new NotFoundException("guide.not-found");
-        }
-        GuideEntity entity = foundEntity.get();
-        if (checkOwner) {
-            checkUserIsGuideOwner(userId, guideId);
-        }
-        return entity;
+    private GuideEntityExtended getAccessibleGuide(long userId, long guideId) {
+        checkUserHasGuideAccess(userId, guideId);
+        return repoGuide.findExtendedById(userId, guideId);
     }
-
-    private void checkUserIsGuideOwner(long userId, long guideId) {
-        boolean isUserAnOwner = repoGuideOwner.existsByGuideIdAndUserId(guideId, userId);
-        if (!isUserAnOwner) {
-            throw new ForbiddenException("guide.not-owner");
-        }
+    
+    private GuideEntity getOwnedGuide(long userId, long guideId) {
+        checkUserHasGuideOwnership(userId, guideId);
+        return repoGuide.findById(guideId).get();
     }
 
 }

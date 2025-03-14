@@ -1,7 +1,5 @@
 package mywild.wildguide.framework.data;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -14,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class Backup {
+public class BackupScheduler {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
