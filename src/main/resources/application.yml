@@ -67,6 +67,7 @@ mywild:
         name: @project.name@
         version: @project.version@
         dev-mode: false
+        backup-retention: 32
     jwt:
         issuer: MyWild
         subject: WildGuide

@@ -15,6 +15,11 @@
     "description": "Whether the server is in development mode or not (dev-mode will show additional logs, etc.)."
   },
   {
+    "name": "mywild.app.backup-retention",
+    "type": "java.lang.Integer",
+    "description": "The number of days back for which backups should be kept."
+  },
+  {
     "name": "mywild.jwt.audience",
     "type": "java.lang.String",
     "description": "The JWT token audience (aud) claim."

@@ -1,1 +1,1 @@
-- TODO: Add logic to delete old backups, to prevent infinite growing backups folder
+- TODO: Implement password recovery: add email to User (store it hashed), add a way to reset / code verify password, add change password
