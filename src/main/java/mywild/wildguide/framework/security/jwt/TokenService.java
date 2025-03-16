@@ -49,7 +49,7 @@ public class TokenService {
                     .issueTime(new Date())
                     .expirationTime(tokenType == TokenType.ACCESS
                         ? Date.from(LocalDateTime.now().plusMinutes(accessTokenDuration).atZone(ZoneId.systemDefault()).toInstant()) // Access
-                        : Date.from(LocalDateTime.now().plusHours(refreshTokenDuration).atZone(ZoneId.systemDefault()).toInstant()) // Refresh
+                        : Date.from(LocalDateTime.now().plusMinutes(refreshTokenDuration).atZone(ZoneId.systemDefault()).toInstant()) // Refresh
                     )
                     .claim("scope", tokenType.toString().toLowerCase())
                     .claim(TokenConstants.JWT_USER_ID, user.getId())

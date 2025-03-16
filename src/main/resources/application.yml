@@ -72,7 +72,7 @@ mywild:
         subject: WildGuide
         audience: ${JWT_AUDIENCE}
         access-token-duration: 60
-        refresh-token-duration: 362
+        refresh-token-duration: 10080
     key:
         private: ${PRIVATE_KEY}
         public: ${PUBLIC_KEY}

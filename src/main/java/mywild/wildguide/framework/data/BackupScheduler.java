@@ -30,8 +30,8 @@ public class BackupScheduler {
     public void backupDatabase() {
         log.warn("Starting database backup");
         Path backupFolder = baseBackupFolder.resolve(LocalDate.now().toString());
-        // Create a database file backup
-        jdbcTemplate.execute("BACKUP TO '" + backupFolder.resolve("h2.zip").toAbsolutePath().toString() + "'");
+        // // Create a database file backup
+        // jdbcTemplate.execute("BACKUP TO '" + backupFolder.resolve("h2.zip").toAbsolutePath().toString() + "'");
         // Create a SQL dump
         jdbcTemplate.execute("SCRIPT DROP TO '" + backupFolder.resolve("sql.zip").toAbsolutePath().toString() + "' COMPRESSION ZIP");
         log.warn("Finished database backup");
