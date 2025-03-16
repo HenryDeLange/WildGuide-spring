@@ -33,6 +33,7 @@ public class UserService {
 
     @Transactional
     public Tokens register(@Valid User user) {
+        user.setEmail(passwordEncoder.encode(user.getEmail().trim().toLowerCase()));
         user.setUsername(user.getUsername().trim().toLowerCase());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserEntity userEntity = repo.save(UserMapper.INSTANCE.dtoToEntity(user));
@@ -72,7 +73,7 @@ public class UserService {
                 .username(foundEntity.get().getUsername())
                 .build();
         }
-        return new UserInfo(-1, "????");
+        return null;
     }
 
     /**

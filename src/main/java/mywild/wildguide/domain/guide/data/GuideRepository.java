@@ -9,7 +9,11 @@ import org.springframework.stereotype.Repository;
 public interface GuideRepository extends CrudRepository<GuideEntity, Long> {
 
     static final String SELECT_EXTENDED_GUIDE =
-        "SELECT g.*, (CASE WHEN (SELECT gs.id AS starred_by_user FROM \"guide_stars\" gs WHERE gs.guide_id = g.id AND gs.user_id = :userId) IS NOT NULL THEN TRUE ELSE FALSE END) AS starred_by_user ";
+        "SELECT g.*, "
+        + "(CASE WHEN"
+        + " (SELECT gs.id AS starred_by_user FROM \"guide_stars\" gs WHERE gs.user_id = :userId AND gs.guide_id = g.id)"
+        + " IS NOT NULL THEN TRUE ELSE FALSE END"
+        + ") AS starred_by_user ";
 
     static final String FIND_GUIDES =
         "FROM \"guides\" g "

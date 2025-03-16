@@ -1,6 +1,6 @@
 -- Insert users
-INSERT INTO "users" (id, username, password, created_by, created_date, last_modified_by, last_modified_date)
-SELECT 1, 'test', '$2a$10$eAMJP3aId.GfC6.Ka44NjeMRTMT0ir3bvnrQk27NTHI5339VVjOiq', 1, CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP();
+INSERT INTO "users" (username, password, email, created_by, created_date, last_modified_by, last_modified_date)
+SELECT 'test', '$2a$10$eAMJP3aId.GfC6.Ka44NjeMRTMT0ir3bvnrQk27NTHI5339VVjOiq', '$2a$10$r5NWhwk6TcVAAQINQo43NeV1VqPlKEDUmVYdtWixLmQzG6gY2yXxC', 1, CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP();
 
 -- Loop using temporary tables
 CREATE TEMPORARY TABLE temp_guide_ids (i INT);
@@ -9,8 +9,8 @@ CREATE TEMPORARY TABLE temp_entry_ids (i INT, j INT);
 INSERT INTO temp_entry_ids (i, j) SELECT i, x FROM temp_guide_ids, SYSTEM_RANGE(1, 500);
 
 -- Insert guides
-INSERT INTO "guides" (name, summary, description, visibility, inaturalist_criteria, created_by, created_date, last_modified_by, last_modified_date)
-SELECT CONCAT('Guide ', i), 'Summary for guide', 'Description for guide', 'PUBLIC', null, 1, CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP()
+INSERT INTO "guides" (name, summary, description, visibility, inaturalist_project, inaturalist_taxon, created_by, created_date, last_modified_by, last_modified_date)
+SELECT CONCAT('Guide ', i), 'Summary for guide', 'Description for guide', 'PUBLIC', null, null, 1, CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP()
 FROM temp_guide_ids;
 
 -- Insert guide owners

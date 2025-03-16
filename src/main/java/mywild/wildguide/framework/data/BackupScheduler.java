@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class BackupScheduler {
 
+    private Path baseBackupFolder = Paths.get("data", "backups");
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -27,7 +29,7 @@ public class BackupScheduler {
     @Scheduled(initialDelay = 30, fixedRate = 60 * 60 * 12, timeUnit = TimeUnit.SECONDS)
     public void backupDatabase() {
         log.warn("Starting database backup");
-        Path backupFolder = Paths.get("backups").resolve(LocalDate.now().toString());
+        Path backupFolder = baseBackupFolder.resolve(LocalDate.now().toString());
         // Create a database file backup
         jdbcTemplate.execute("BACKUP TO '" + backupFolder.resolve("h2.zip").toAbsolutePath().toString() + "'");
         // Create a SQL dump
@@ -39,7 +41,7 @@ public class BackupScheduler {
     public void cleanOldBackups() {
         log.warn("Cleaning up old database backups");
         try {
-            Files.list(Paths.get("backups"))
+            Files.list(baseBackupFolder)
                 .filter(Files::isDirectory)
                 .filter(path -> {
                     try {

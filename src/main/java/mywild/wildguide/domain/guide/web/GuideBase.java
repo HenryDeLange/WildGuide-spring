@@ -31,6 +31,8 @@ public class GuideBase {
     @NotNull
     private GuideVisibilityType visibility;
 
-    private String inaturalistCriteria;
+    private Long inaturalistProject;
+
+    private Long inaturalistTaxon;
 
 }

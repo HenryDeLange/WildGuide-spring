@@ -1,1 +1,2 @@
-- TODO: Implement password recovery: add email to User (store it hashed), add a way to reset / code verify password, add change password
+- TODO: Implement "reset/forgot password" (using email)
+- TODO: Implement "change password"

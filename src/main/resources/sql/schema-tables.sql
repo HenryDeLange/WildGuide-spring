@@ -1,27 +1,33 @@
 -- USERS
 CREATE TABLE IF NOT EXISTS "users" (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(64) NOT NULL UNIQUE,
+    username VARCHAR(64) NOT NULL,
     password VARCHAR(60) NOT NULL,
+    email VARCHAR(256) NOT NULL,
     created_by BIGINT,
     created_date TIMESTAMP,
     last_modified_by BIGINT,
-    last_modified_date TIMESTAMP
+    last_modified_date TIMESTAMP,
+    UNIQUE (username),
+    UNIQUE (email)
 );
 
 -- GUIDES
 CREATE TABLE IF NOT EXISTS "guides" (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(128) NOT NULL UNIQUE,
+    name VARCHAR(128) NOT NULL,
     summary VARCHAR(256),
     description TEXT,
     visibility VARCHAR(12) NOT NULL,
-    inaturalist_criteria VARCHAR(512),
+    inaturalist_project BIGINT,
+    inaturalist_taxon BIGINT,
     created_by BIGINT,
     created_date TIMESTAMP,
     last_modified_by BIGINT,
-    last_modified_date TIMESTAMP
+    last_modified_date TIMESTAMP,
+    UNIQUE (name)
 );
+CREATE INDEX IF NOT EXISTS idx_guides_visibility ON "guides"(visibility);
 
 -- GUIDE OWNERS
 CREATE TABLE IF NOT EXISTS "guide_owners" (

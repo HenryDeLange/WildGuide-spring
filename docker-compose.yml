@@ -5,7 +5,6 @@ services:
     container_name: wildguide
     volumes:
       - ./data:/app/data
-      - ./logs:/app/logs
     stop_signal: SIGKILL
     tty: true
     restart: unless-stopped

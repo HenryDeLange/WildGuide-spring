@@ -28,4 +28,8 @@ public class UserEntity extends BaseEntity {
     @Size(min = 60, max = 60)
     private String password;
 
+    @NotBlank
+    @Size(min = 6, max = 256)
+    private String email;
+
 }

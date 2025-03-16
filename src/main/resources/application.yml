@@ -16,13 +16,12 @@ spring:
             mode: always
             schema-locations: 
                 - classpath:sql/schema-tables.sql
-                - classpath:sql/schema-indexes.sql
                 # - classpath:sql/schema-v1.sql
             # data-locations:
                 # - classpath:sql/data-v1.sql
     datasource:
         # Some noteworthy settings: DB_CLOSE_DELAY=-1; DB_CLOSE_ON_EXIT=FALSE; CACHE_SIZE=131072; AUTO_SERVER=TRUE; AUTO_SERVER_PORT=9090;
-        url: jdbc:h2:file:./data/wildguide;AUTO_SERVER=TRUE
+        url: jdbc:h2:file:./data/db/wildguide;AUTO_SERVER=TRUE
         driverClassName: org.h2.Driver
         username: wildguide
         password: wildguide

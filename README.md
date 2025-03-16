@@ -54,7 +54,7 @@ openssl pkcs8 -topk8 -inform PEM -in ./keys/private_key.pem -outform PEM -nocryp
 (In Windows you can use WSL to execute the commands.)
 
 #### Volumes
-Attach volumes for the `/app/data`, `/app/backups` and `/app/logs` folders.
+Attach a volume for the `/app` folder (or individual `/app/data/db`, `/app/data/backups` and `/app/data/logs` folders).
 
 ### Deploy
 
