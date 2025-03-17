@@ -12,10 +12,11 @@ public interface EntryRepository extends CrudRepository<EntryEntity, Long> {
     static final String FIND_ENTRIES =
         "FROM \"guide_entries\" ge "
         + "WHERE ("
-        + "ge.guide_id = :guideId "
+        + " ge.guide_id = :guideId "
         + ") AND ("
-        + ":name IS NULL "
-        + "OR LOWER(ge.name) LIKE CONCAT('%', LOWER(:name), '%')"
+        + " :name IS NULL"
+        + " OR LOWER(ge.name) LIKE CONCAT('%', LOWER(:name), '%')"
+        + " OR LOWER(ge.scientific_name) LIKE CONCAT('%', LOWER(:name), '%')"
         + ")";
 
     @Query("SELECT ge.* " + FIND_ENTRIES + " ORDER BY LOWER(ge.name) ASC LIMIT :limit OFFSET :offset")
