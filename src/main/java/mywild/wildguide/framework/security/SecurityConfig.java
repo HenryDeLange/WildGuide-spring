@@ -85,16 +85,16 @@ public class SecurityConfig {
                     .requestMatchers("/swagger-ui.html").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers("/v3/**").permitAll()
-                    // Version Endpoint
-                    .requestMatchers(apiPath + "/version/**").permitAll()
                     // Auth Endpoints
                     .requestMatchers(apiPath + "/users/register/**").permitAll()
                     .requestMatchers(apiPath + "/users/login").permitAll()
                     .requestMatchers(apiPath + "/users/refresh/**").hasAuthority("SCOPE_refresh")
-                    // All other Endpoints
+                    // Version Endpoint
+                    .requestMatchers(apiPath + "/version/**").permitAll()
+                    // Domain Endpoints
+                    .requestMatchers(HttpMethod.GET, apiPath + "/guides/stars").authenticated()
                     .requestMatchers(HttpMethod.GET, apiPath + "/guides/**").permitAll()
-                    // .anyRequest().authenticated()
-                    .anyRequest().hasAuthority("SCOPE_access");
+                    .anyRequest().hasAuthority("SCOPE_access"); // .anyRequest().authenticated()
             })
             // Indicate this is a Resource Server that accepts JWT tokens
             .oauth2ResourceServer(configure -> configure.jwt(Customizer.withDefaults()))
