@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import mywild.wildguide.domain.entry.data.EntryEntity;
 import mywild.wildguide.domain.entry.data.EntryRepository;
+import mywild.wildguide.domain.entry.data.EntryScientificName;
 import mywild.wildguide.domain.entry.web.Entry;
 import mywild.wildguide.domain.entry.web.EntryBase;
 import mywild.wildguide.domain.utils.DomainService;
@@ -70,6 +71,11 @@ public class EntryService extends DomainService {
     public void deleteEntry(long userId, long guideId, long entryId) {
         checkUserHasGuideOwnership(userId, guideId);
         repoEntry.deleteById(entryId);
+    }
+
+    public List<EntryScientificName> findEntriesScientificNames(long userId, long guideId) {
+        checkUserHasGuideOwnership(userId, guideId);
+        return repoEntry.findEntriesScientificNames(guideId);
     }
 
 }

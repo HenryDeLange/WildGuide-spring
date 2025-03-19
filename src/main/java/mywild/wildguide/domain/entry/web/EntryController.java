@@ -1,5 +1,6 @@
 package mywild.wildguide.domain.entry.web;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import mywild.wildguide.domain.entry.data.EntryScientificName;
 import mywild.wildguide.domain.entry.logic.EntryService;
 import mywild.wildguide.framework.security.jwt.JwtUtils;
 import mywild.wildguide.framework.web.BaseController;
@@ -91,6 +93,17 @@ public class EntryController extends BaseController {
             JwtUtils.getUserIdFromJwt(jwtToken), 
             guideId,
             entryId);
+    }
+
+    @Operation(summary = "Find all Entries with scientific names associated with the Guide.")
+    @GetMapping("/guides/{guideId}/entries/scientificNames")
+    public List<EntryScientificName> findEntriesScientificNames(
+        JwtAuthenticationToken jwtToken,
+        @PathVariable long guideId
+    ) {
+        return service.findEntriesScientificNames(
+            JwtUtils.getUserIdFromJwt(jwtToken),
+            guideId);
     }
 
 }
