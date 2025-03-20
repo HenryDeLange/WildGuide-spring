@@ -33,6 +33,9 @@ public interface GuideMapper extends BaseMapper {
     @Mapping(target = "starredByUser", constant = "false")
     public Guide entityToDto(GuideEntity entity);
 
+    @Mapping(target = "starredByUser", source = "starredByUser")
+    public Guide entityToDto(GuideEntity entity, boolean starredByUser);
+
     public Guide entityToDto(GuideEntityExtended entity);
 
     @Mapping(target = "id", expression = "java(null)")

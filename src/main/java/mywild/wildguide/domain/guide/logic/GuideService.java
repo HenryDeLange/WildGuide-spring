@@ -48,10 +48,12 @@ public class GuideService extends DomainService {
 
     public @Valid Paged<Guide> findGuides(long userId, int page, String name) {
         int totalCount = repoGuide.countByVisibilityAndName(userId, name);
-        List<GuideEntityExtended> entities = repoGuide.findByVisibilityAndName(userId, name, pageSize, page * pageSize);
+        List<GuideEntity> entities = repoGuide.findByVisibilityAndName(userId, name, pageSize, page * pageSize);
+        List<Long> starredGuides = repoGuideStar.findStarredGuidesIdsByUser(userId);
         return new Paged<>(
             page, pageSize, totalCount,
-            entities.stream().map(GuideMapper.INSTANCE::entityToDto).toList());
+            entities.stream().map(guide -> GuideMapper.INSTANCE.entityToDto(
+                guide, starredGuides.contains(guide.getId()))).toList());
     }
 
     public @Valid Guide findGuide(long userId, long guideId) {

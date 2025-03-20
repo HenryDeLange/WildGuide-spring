@@ -36,6 +36,7 @@ public interface EntryRepository extends CrudRepository<EntryEntity, Long> {
     + "FROM \"guide_entries\" ge "
     + "WHERE ge.guide_id = :guideId "
     + "AND ge.inaturalist_taxon IS NOT NULL")
-    List<EntryScientificName> findEntriesScientificNames(long guideId);
+    List<EntryScientificName> findEntriesScientificNames(
+        long guideId);
 
 }

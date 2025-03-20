@@ -16,6 +16,11 @@ public interface GuideStarLinkRepository extends CrudRepository<GuideStarLink, L
         + "ORDER BY LOWER(g.name) ASC")
     List<GuideEntityExtended> findStarredGuidesByUser(long userId);
 
+    @Query("SELECT guide_id "
+        + "FROM \"guide_stars\" "
+        + "WHERE user_id = :userId")
+    List<Long> findStarredGuidesIdsByUser(long userId);
+
     @Modifying
     @Query("DELETE FROM \"guide_stars\" WHERE user_id = :userId AND guide_id = :guideId")
     void deleteByUserAndGuide(long userId, long guideId);
