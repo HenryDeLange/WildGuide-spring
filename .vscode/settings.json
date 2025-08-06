@@ -15,6 +15,7 @@
         "liberica",
         "logback",
         "MapStruct",
+        "micronaut",
         "mvnw",
         "MyWild",
         "nocrypt",

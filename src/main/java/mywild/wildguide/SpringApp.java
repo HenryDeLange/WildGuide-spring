@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootApplication(
-    scanBasePackageClasses = WildGuideApplication.class,
+    scanBasePackageClasses = SpringApp.class,
     exclude = {
         HibernateJpaAutoConfiguration.class,
         RedisAutoConfiguration.class,
@@ -44,10 +44,10 @@ import lombok.extern.slf4j.Slf4j;
     }
 )
 @EnableScheduling
-public class WildGuideApplication {
+public class SpringApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(WildGuideApplication.class, args);
+        SpringApplication.run(SpringApp.class, args);
     }
 
     @Component

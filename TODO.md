@@ -1,2 +1,3 @@
 - TODO: Implement "reset/forgot password" (using email)
 - TODO: Implement "change password"
+- TODO: Add unit tests to test guide/entry CRUD permissions

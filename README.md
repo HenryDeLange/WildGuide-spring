@@ -25,7 +25,7 @@ See the [application.yml](./src/main/resources/application.yml) file. (Propertie
 
 ### Build
 
-This project written in `Java 23` using `Spring Boot`, and `Maven` to build.
+This project written in `Java 24` using `Spring Boot`, and `Maven` to build.
 
 `mvn clean verify -P prod`
 
