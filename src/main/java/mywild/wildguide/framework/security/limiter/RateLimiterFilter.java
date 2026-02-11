@@ -1,7 +1,9 @@
 package mywild.wildguide.framework.security.limiter;
 
 import java.io.IOException;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -21,32 +23,40 @@ public class RateLimiterFilter implements Filter {
     @Autowired
     private UserRateLimiter userRateLimiter;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        if (!(request instanceof HttpServletRequest)) {
+            return;
+        }
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         boolean isWithinLimit = true;
         if (!globalRateLimiter.getBucket().tryConsume(1)) {
             isWithinLimit = false;
-            denyRequest(response, "From all users.");
+            denyRequest(response, "rate-limiter.all-users", httpRequest.getLocale());
         }
         if (!userRateLimiter.getBucket(httpRequest).tryConsume(1) && isWithinLimit) {
             isWithinLimit = false;
-            denyRequest(response, "From this user.");
+            denyRequest(response, "rate-limiter.current-user", httpRequest.getLocale());
         }
         if (isWithinLimit && !userRateLimiter.withinConcurrentUserLimit()) {
             isWithinLimit = false;
-            denyRequest(response, "Too many active users.");
+            denyRequest(response, "rate-limiter.active-users", httpRequest.getLocale());
         }
         if (isWithinLimit) {
             chain.doFilter(request, response);
         }
     }
 
-    private void denyRequest(ServletResponse response, String message) throws IOException {
+    private void denyRequest(ServletResponse response, String message, Locale locale) throws IOException {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.setStatus(429);
-        httpResponse.getWriter().write("Too many requests: " + message);
+        String translatedMessage = messageSource.getMessage(message, null, null, locale);
+        String jsonBody = "{ \"reason\": \"" + translatedMessage + "\" }";
+        httpResponse.getWriter().write(jsonBody);
     }
 
     @Override

@@ -73,9 +73,9 @@ mywild:
         audience: ${JWT_AUDIENCE}
         access-token-duration: 60
         refresh-token-duration: 10080
-    key:
-        private: ${PRIVATE_KEY}
-        public: ${PUBLIC_KEY}
+        key:
+            private: ${JWT_PRIVATE_KEY}
+            public: ${JWT_PUBLIC_KEY}
     cors: ${CORS}
     api-path: api/v1
     wildguide:
@@ -84,3 +84,4 @@ mywild:
         global-rate-limit: 3000
         page-size: 50
         inat-results-per-page: 200
+        file-upload-path: ./files

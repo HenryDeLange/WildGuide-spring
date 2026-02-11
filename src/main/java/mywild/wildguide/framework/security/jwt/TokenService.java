@@ -4,6 +4,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -51,13 +52,13 @@ public class TokenService {
                         ? Date.from(LocalDateTime.now().plusMinutes(accessTokenDuration).atZone(ZoneId.systemDefault()).toInstant()) // Access
                         : Date.from(LocalDateTime.now().plusMinutes(refreshTokenDuration).atZone(ZoneId.systemDefault()).toInstant()) // Refresh
                     )
-                    .claim("scope", tokenType.toString().toLowerCase())
+                    .claim("scope", tokenType.toString().toLowerCase(Locale.getDefault()))
                     .claim(TokenConstants.JWT_USER_ID, user.getId())
                     .claim(TokenConstants.JWT_USER_NAME, user.getUsername())
                     .build();
             SignedJWT jws = new SignedJWT(jwtHeader, jwtClaims);
             jws.sign(new RSASSASigner(privateKey));
-            // TODO: Encrypt the JWS (signed JWT) token to get a JWE token
+            // Encrypt the JWS (signed JWT) token to get a JWE token
             // JWEHeader jweHeader = new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256GCM).contentType("JWT").build();
             // JWEObject jwe = new JWEObject(jweHeader, new Payload(jws));
             // jwe.encrypt(new RSAEncrypter(publicKey));

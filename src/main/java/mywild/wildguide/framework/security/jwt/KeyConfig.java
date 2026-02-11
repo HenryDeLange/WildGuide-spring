@@ -1,5 +1,6 @@
-package mywild.wildguide.framework.security;
+package mywild.wildguide.framework.security.jwt;
 
+import java.nio.charset.Charset;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
@@ -15,21 +16,23 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class KeyConfig {
 
-    @Value("${mywild.key.private}")
+    @Value("${mywild.jwt.key.private}")
     private String privateKeyString;
 
-    @Value("${mywild.key.public}")
+    @Value("${mywild.jwt.key.public}")
     private String publicKeyString;
 
     @Bean
     RSAPrivateKey privateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyString.getBytes()));
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(
+            Base64.getDecoder().decode(privateKeyString.getBytes(Charset.defaultCharset())));
         return (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(spec);
     }
 
     @Bean
     RSAPublicKey publicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyString.getBytes()));
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(
+            Base64.getDecoder().decode(publicKeyString.getBytes(Charset.defaultCharset())));
         return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(spec);
     }
 

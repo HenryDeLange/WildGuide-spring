@@ -32,7 +32,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Tokens register(@Valid User user) {
+    public @Valid Tokens register(@Valid User user) {
         user.setEmail(passwordEncoder.encode(user.getEmail().trim().toLowerCase()));
         user.setUsername(user.getUsername().trim().toLowerCase());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -44,7 +44,7 @@ public class UserService {
             tokenService.generateToken(TokenType.REFRESH, userEntity));
     }
 
-    public Tokens login(@Valid UserLogin login) {
+    public @Valid Tokens login(@Valid UserLogin login) {
         Optional<UserEntity> foundEntity = repo.findByUsername(login.getUsername().toLowerCase());
         if (!foundEntity.isPresent() || !passwordEncoder.matches(login.getPassword(), foundEntity.get().getPassword()))
             throw new ForbiddenException("user.incorrect");
@@ -56,7 +56,7 @@ public class UserService {
             tokenService.generateToken(TokenType.REFRESH, entity));
     }
 
-    public Tokens refresh(long userId) {
+    public @Valid Tokens refresh(long userId) {
         UserEntity userEntity = getValidUser(userId);
         return new Tokens(
             userEntity.getId(),
@@ -65,7 +65,7 @@ public class UserService {
             tokenService.generateToken(TokenType.REFRESH, userEntity));
     }
 
-    public UserInfo findUserInfo(@Valid @NotEmpty String username) {
+    public @Valid UserInfo findUserInfo(@Valid @NotEmpty String username) {
         Optional<UserEntity> foundEntity = repo.findByUsername(username.trim().toLowerCase());
         if (foundEntity.isPresent()) {
             return UserInfo.builder()

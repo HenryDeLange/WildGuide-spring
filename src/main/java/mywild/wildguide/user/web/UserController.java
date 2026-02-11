@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import mywild.wildguide.framework.security.jwt.JwtUtils;
 import mywild.wildguide.framework.web.BaseController;
@@ -26,25 +25,25 @@ public class UserController extends BaseController {
 
     @Operation(summary = "Register (create) a new User.")
     @PostMapping("/users/register")
-    public @Valid Tokens register(@RequestBody User user) {
+    public Tokens register(@RequestBody User user) {
         return service.register(user);
     }
 
     @Operation(summary = "Login as an existing User in order to get a pair of access and refresh tokens.")
     @PostMapping("/users/login")
-    public @Valid Tokens login(@RequestBody UserLogin login) {
+    public Tokens login(@RequestBody UserLogin login) {
         return service.login(login);
     }
 
     @Operation(summary = "Request a new pair of access and refresh tokens.")
     @PostMapping("/users/refresh")
-    public @Valid Tokens refresh(JwtAuthenticationToken jwtToken) {
+    public Tokens refresh(JwtAuthenticationToken jwtToken) {
         return service.refresh(JwtUtils.getUserIdFromJwt(jwtToken));
     }
 
     @Operation(summary = "Find User information (in particular the ID) based on the provided Username.")
     @GetMapping("/users")
-    public @Valid UserInfo findUserInfo(@RequestParam @Valid @NotBlank String username) {
+    public UserInfo findUserInfo(@RequestParam @NotBlank String username) {
         return service.findUserInfo(username);
     }
 

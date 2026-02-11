@@ -45,12 +45,12 @@
     "description": "The number of minutes the JWT refresh token is valid for."
   },
   {
-    "name": "mywild.key.private",
+    "name": "mywild.jwt.key.private",
     "type": "java.lang.String",
     "description": "The private key used by the JWT token."
   },
   {
-    "name": "mywild.key.public",
+    "name": "mywild.jwt.key.public",
     "type": "java.lang.String",
     "description": "The public key used by the JWT token."
   },
@@ -88,5 +88,10 @@
     "name": "mywild.wildguide.inat-results-per-page",
     "type": "java.lang.Integer",
     "description": "How many iNaturalist Observations can be fetched per request (per_page)."
+  },
+  {
+    "name": "mywild.wildguide.file-upload-path",
+    "type": "java.lang.String",
+    "description": "The path where file uploads will be stored.'"
   }
 ]}

@@ -5,6 +5,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,9 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -28,13 +31,16 @@ public class ErrorConfig {
      * which masks the real error codes thrown from the services.
      */
     @RestControllerAdvice
-    public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+    public static class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
         @Autowired
         private MessageSource messageSource;
 
         @ExceptionHandler(Exception.class)
         public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+            if (request instanceof ServletWebRequest servletWebRequest) {
+                log.debug("Caused By URL: {}", servletWebRequest.getRequest().getRequestURL());
+            }
             try {
                 return super.handleException(ex, request);
             }
@@ -43,10 +49,17 @@ public class ErrorConfig {
                     String translatedMessage = messageSource.getMessage(
                         appException.getMessage(), null, appException.getMessage(), request.getLocale());
                     log.error(translatedMessage, appException);
+                    ResponseStatus responseStatus = AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class);
+                    HttpStatus status = (responseStatus != null) ? responseStatus.code() : HttpStatus.INTERNAL_SERVER_ERROR;
                     return handleExceptionInternal(appException, translatedMessage,
-                        new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+                        new HttpHeaders(), status, request);
                 }
-                else {
+                else if (notHandledException instanceof DbActionExecutionException dbException) {
+                    log.error(dbException.getMessage(), dbException);
+                    return handleExceptionInternal(dbException, dbException.getMessage(),
+                        new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+                }
+                else  {
                     log.error(notHandledException.getMessage(), notHandledException);
                     return handleExceptionInternal(notHandledException, notHandledException.getMessage(),
                         new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
@@ -63,7 +76,6 @@ public class ErrorConfig {
             }
             else if (ex instanceof DbActionExecutionException dbException) {
                 // Don't show the database details to the frontend client
-                // TODO: Maybe look at the child type or up the causedBy chain to see if a more meaningful message can be returned (JdbcSQLIntegrityConstraintViolationException, etc.)
                 return createResponseEntity(dbException.getClass().getSimpleName(), headers, statusCode, request);
             }
             return super.handleExceptionInternal(ex, body, headers, statusCode, request);

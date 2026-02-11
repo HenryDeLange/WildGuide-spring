@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "APIKEY",
         "Appender",
         "bellsoft",
         "Buildx",
@@ -19,6 +20,7 @@
         "mvnw",
         "MyWild",
         "nocrypt",
+        "OAEP",
         "outform",
         "pkcs",
         "proguard",
@@ -26,8 +28,10 @@
         "pubout",
         "Reloadable",
         "rollingpolicy",
+        "RSASSA",
         "SpringDoc",
         "SpringFramework",
+        "testtest",
         "topk8",
         "webmvc",
         "whitelabel",

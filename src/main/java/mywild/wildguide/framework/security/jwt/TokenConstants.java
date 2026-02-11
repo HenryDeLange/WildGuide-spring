@@ -5,7 +5,7 @@ public final class TokenConstants {
     private TokenConstants() {
     }
 
-    public static final String JWT_USER_ID = "user";
-    public static final String JWT_USER_NAME = "username";
+    public static final String JWT_USER_ID = "user-id";
+    public static final String JWT_USER_NAME = "user-name";
 
 }
