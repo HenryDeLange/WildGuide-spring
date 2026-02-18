@@ -3,19 +3,17 @@ package mywild.wildguide.domain.entry.logic;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
 import mywild.wildguide.domain.entry.data.EntryEntity;
 import mywild.wildguide.domain.entry.web.Entry;
 import mywild.wildguide.domain.entry.web.EntryBase;
 import mywild.wildguide.framework.logic.BaseMapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EntryMapper extends BaseMapper {
-
-    EntryMapper INSTANCE = Mappers.getMapper(EntryMapper.class);
 
     @Mapping(target = "name", expression = "java(trim(dto.getName()))")
     @Mapping(target = "scientificName", expression = "java(trim(dto.getScientificName()))")
+    @Mapping(target = "version", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
@@ -26,6 +24,7 @@ public interface EntryMapper extends BaseMapper {
     @Mapping(target = "scientificName", expression = "java(trim(dto.getScientificName()))")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "guideId", ignore = true)
+    @Mapping(target = "version", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)

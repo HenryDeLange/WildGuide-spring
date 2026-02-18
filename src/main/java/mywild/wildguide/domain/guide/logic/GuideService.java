@@ -46,26 +46,29 @@ public class GuideService extends DomainService {
     @Autowired
     private EntryRepository repoEntry;
 
+    @Autowired
+    private GuideMapper mapper;
+
     public @Valid Paged<Guide> findGuides(long userId, int page, String name) {
         int totalCount = repoGuide.countByVisibilityAndName(userId, name);
         List<GuideEntity> entities = repoGuide.findByVisibilityAndName(userId, name, pageSize, page * pageSize);
         List<Long> starredGuides = repoGuideStar.findStarredGuidesIdsByUser(userId);
         return new Paged<>(
             page, pageSize, totalCount,
-            entities.stream().map(guide -> GuideMapper.INSTANCE.entityToDto(
+            entities.stream().map(guide -> mapper.entityToDto(
                 guide, starredGuides.contains(guide.getId()))).toList());
     }
 
     public @Valid Guide findGuide(long userId, long guideId) {
         GuideEntityExtended entity = getAccessibleGuide(userId, guideId);
-        return GuideMapper.INSTANCE.entityToDto(entity);
+        return mapper.entityToDto(entity);
     }
 
     @Transactional
     public @Valid Guide createGuide(long userId, @Valid GuideBase guideBase) {
-        Guide entity = GuideMapper.INSTANCE.entityToDto(
-            repoGuide.save(GuideMapper.INSTANCE.dtoToEntity(
-                GuideMapper.INSTANCE.baseDtoToFullDto(guideBase))));
+        Guide entity = mapper.entityToDto(
+            repoGuide.save(mapper.dtoToEntity(
+                mapper.baseDtoToFullDto(guideBase))));
         repoGuideOwner.save(new GuideOwnerLink(entity.getId(), userId));
         return entity;
     }
@@ -73,8 +76,8 @@ public class GuideService extends DomainService {
     @Transactional
     public @Valid Guide updateGuide(long userId, long guideId, @Valid GuideBase guideBase) {
         GuideEntity entity = getOwnedGuide(userId, guideId);
-        return GuideMapper.INSTANCE.entityToDto(
-            repoGuide.save(GuideMapper.INSTANCE.dtoToExistingEntity(
+        return mapper.entityToDto(
+            repoGuide.save(mapper.dtoToExistingEntity(
                 entity, guideBase)));
     }
 
@@ -118,7 +121,7 @@ public class GuideService extends DomainService {
 
     public List<Guide> findStarredGuides(long userId) {
         List<GuideEntityExtended> entities = repoGuideStar.findStarredGuidesByUser(userId);
-        return entities.stream().map(GuideMapper.INSTANCE::entityToDto).toList();
+        return entities.stream().map(mapper::entityToDto).toList();
     }
 
     @Transactional

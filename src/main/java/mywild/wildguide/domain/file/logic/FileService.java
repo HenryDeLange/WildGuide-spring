@@ -44,6 +44,9 @@ public class FileService extends DomainService {
     @Value("${mywild.wildguide.file-upload-path}")
     private String fileUploadFolder;
 
+    @Value("${mywild.api-path}")
+    private String apiPath;
+
     private Path fileUploadPath;
 
     @PostConstruct
@@ -61,7 +64,8 @@ public class FileService extends DomainService {
         try (Stream<Path> stream = Files.walk(basePath)) {
             return stream
                 .filter(Files::isRegularFile)
-                .map(file -> getFileUrl(fileCategory, fileCategoryId, file.getFileName().toString()))
+                .map(file -> getFileUrl(userId, fileCategory, fileCategoryId, 
+                    file.getParent().getFileName().toString(), file.getFileName().toString()))
                 .collect(Collectors.toList());
         }
         catch (NoSuchFileException ex) {
@@ -73,9 +77,9 @@ public class FileService extends DomainService {
         }
     }
 
-    public Resource findFile(long userId, FileCategory fileCategory, long fileCategoryId, String filename) throws MalformedURLException {
+    public Resource findFile(long userId, FileCategory fileCategory, long fileCategoryId, String fileId, String filename) throws MalformedURLException {
         checkVisibility(userId, fileCategory, fileCategoryId);
-        Path filePath = getFilePath(fileCategory, fileCategoryId, filename);
+        Path filePath = getFilePath(fileCategory, fileCategoryId, fileId, filename);
         Resource resource = new UrlResource(filePath.toUri());
         if (!resource.exists() || !resource.isReadable()) {
             throw new NotFoundException("file.not-found");
@@ -85,8 +89,9 @@ public class FileService extends DomainService {
 
     public String createFile(long userId, FileCategory fileCategory, long fileCategoryId, MultipartFile file) {
         checkVisibility(userId, fileCategory, fileCategoryId);
-        String filename = "[" + UUID.randomUUID().toString() + "] " + file.getOriginalFilename();
-        Path filePath = getFilePath(fileCategory, fileCategoryId, filename);
+        String fileId = UUID.randomUUID().toString();
+        String filename = file.getOriginalFilename();
+        Path filePath = getFilePath(fileCategory, fileCategoryId, fileId, filename);
         try {
             if (!Files.exists(filePath.getParent())) {
                 Files.createDirectories(filePath.getParent());
@@ -96,12 +101,12 @@ public class FileService extends DomainService {
         catch (IOException ex) {
             throw new ApplicationException("file.error");
         }
-        return getFileUrl(fileCategory, fileCategoryId, filename);
+        return getFileUrl(userId, fileCategory, fileCategoryId, fileId, filename);
     }
 
-    public void deleteFile(long userId, FileCategory fileCategory, long fileCategoryId, String filename) {
+    public void deleteFile(long userId, FileCategory fileCategory, long fileCategoryId, String fileId, String filename) {
         checkVisibility(userId, fileCategory, fileCategoryId);
-        Path filePath = getFilePath(fileCategory, fileCategoryId, filename);
+        Path filePath = getFilePath(fileCategory, fileCategoryId, fileId, filename);
         if (!Files.exists(filePath)) {
             throw new NotFoundException("file.not-found");
         }
@@ -113,8 +118,8 @@ public class FileService extends DomainService {
         }
     }
 
-    private String getFileUrl(FileCategory fileCategory, long fileCategoryId, String filename) {
-        return "./" + fileCategory + "/" + fileCategoryId + "/" + filename;
+    private String getFileUrl(long userId, FileCategory fileCategory, long fileCategoryId, String fileId, String filename) {
+        return apiPath + "/users/" + userId + "/files/" + fileCategory + "/" + fileCategoryId + "/" + fileId + "/" + filename;
     }
 
     private Path getBasePath(FileCategory fileCategory, long fileCategoryId) {
@@ -124,8 +129,9 @@ public class FileService extends DomainService {
         return basePath;
     }
 
-    private Path getFilePath(FileCategory fileCategory, long fileCategoryId, String filename) {
+    private Path getFilePath(FileCategory fileCategory, long fileCategoryId, String fileId, String filename) {
         return getBasePath(fileCategory, fileCategoryId)
+            .resolve(fileId)
             .resolve(filename)
             .normalize().toAbsolutePath();
     }
@@ -137,11 +143,9 @@ public class FileService extends DomainService {
                     checkUserHasGuideAccess(userId, fileCategoryId);                    
                     break;
                 case ENTRY:
-                    var entryEntity = repoEntry.findById(fileCategoryId);
-                    if (!entryEntity.isPresent()) {
-                        throw new BadRequestException("file.not-found");
-                    }
-                    var guideId = entryEntity.get().getGuideId();
+                    var entryEntity = repoEntry.findById(fileCategoryId)
+                        .orElseThrow(() -> new BadRequestException("file.not-found"));
+                    var guideId = entryEntity.getGuideId();
                     checkUserHasGuideAccess(userId, guideId);                    
                     break;
                 case USER:

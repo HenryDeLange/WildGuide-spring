@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,26 +26,45 @@ public class UserController extends BaseController {
 
     @Operation(summary = "Register (create) a new User.")
     @PostMapping("/users/register")
-    public Tokens register(@RequestBody User user) {
+    public Tokens register(
+        @RequestBody User user
+    ) {
         return service.register(user);
     }
 
     @Operation(summary = "Login as an existing User in order to get a pair of access and refresh tokens.")
     @PostMapping("/users/login")
-    public Tokens login(@RequestBody UserLogin login) {
+    public Tokens login(
+        @RequestBody UserLogin login
+    ) {
         return service.login(login);
     }
 
     @Operation(summary = "Request a new pair of access and refresh tokens.")
     @PostMapping("/users/refresh")
-    public Tokens refresh(JwtAuthenticationToken jwtToken) {
+    public Tokens refresh(
+        JwtAuthenticationToken jwtToken
+    ) {
         return service.refresh(JwtUtils.getUserIdFromJwt(jwtToken));
     }
 
     @Operation(summary = "Find User information (in particular the ID) based on the provided Username.")
     @GetMapping("/users")
-    public UserInfo findUserInfo(@RequestParam @NotBlank String username) {
+    public UserInfo findUserInfo(
+        @RequestParam @NotBlank String username
+    ) {
         return service.findUserInfo(username);
+    }
+
+    @Operation(summary = "Update the profile of the authenticated User.")
+    @PutMapping("/users/profile")
+    public UserInfo updateUserProfile(
+        JwtAuthenticationToken jwtToken,
+        @RequestParam String description
+    ) {
+        return service.updateUserProfile(
+            JwtUtils.getUserIdFromJwt(jwtToken),
+            description);
     }
 
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,35 +24,39 @@ import mywild.wildguide.framework.web.BaseController;
 
 @Tag(name = "Files", description = "Upload and retrieve Files.")
 @RestController
-@RequestMapping("/files")
 public class FileController extends BaseController {
 
     @Autowired
     private FileService service;
     
     @Operation(summary = "Find all Files associated with the specified resource, that are visible to User (owner, member or public).")
-    @GetMapping("/{fileCategory}/{fileCategoryId}")
+    @GetMapping("/users/{userId}/files/{fileCategory}/{fileCategoryId}")
     public List<String> findFiles(
-        JwtAuthenticationToken jwtToken,
         @PathVariable FileCategory fileCategory,
-        @PathVariable String fileCategoryId
+        @PathVariable String fileCategoryId,
+        @PathVariable String userId
     ) {
         return service.findFiles(
-            JwtUtils.getUserIdFromJwt(jwtToken),
-            fileCategory, Long.parseLong(fileCategoryId));
+            Long.parseLong(userId),
+            fileCategory,
+            Long.parseLong(fileCategoryId));
     }
 
-    @Operation(summary = "Find the specified File, if visible to the User (owner, member or public).")
-    @GetMapping("/{fileCategory}/{fileCategoryId}/{filename}")
-    public ResponseEntity<Resource> findFile(
+    @Operation(summary = "Download the specified File, if visible to the User (owner, member or public).")
+    @GetMapping("/users/{userId}/files/{fileCategory}/{fileCategoryId}/{fileId}/{filename}")
+    public ResponseEntity<Resource> downloadFile(
         JwtAuthenticationToken jwtToken,
         @PathVariable FileCategory fileCategory,
         @PathVariable String fileCategoryId,
-        @PathVariable String filename
+        @PathVariable String fileId,
+        @PathVariable String filename,
+        @PathVariable String userId
     ) throws MalformedURLException {
         Resource fileResource = service.findFile(
-            JwtUtils.getUserIdFromJwt(jwtToken),
-            fileCategory, Long.parseLong(fileCategoryId),
+            Long.parseLong(userId),
+            fileCategory,
+            Long.parseLong(fileCategoryId),
+            fileId,
             filename);
         // Add caching headers
         HttpHeaders headers = new HttpHeaders();
@@ -66,7 +69,7 @@ public class FileController extends BaseController {
     }
 
     @Operation(summary = "Create a new File.")
-    @PostMapping(path = "/{fileCategory}/{fileCategoryId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/files/{fileCategory}/{fileCategoryId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String createFile(
         JwtAuthenticationToken jwtToken,
         @PathVariable FileCategory fileCategory,
@@ -75,22 +78,26 @@ public class FileController extends BaseController {
     ) {
         return service.createFile(
             JwtUtils.getUserIdFromJwt(jwtToken),
-            fileCategory, Long.parseLong(fileCategoryId),
+            fileCategory,
+            Long.parseLong(fileCategoryId),
             file);
     }
 
     @Operation(summary = "Delete a specific File.")
-    @DeleteMapping("/{fileCategory}/{fileCategoryId}/{filename}")
+    @DeleteMapping("/files/{fileCategory}/{fileCategoryId}/{fileId}/{fileName}")
     public void deleteFile(
         JwtAuthenticationToken jwtToken,
         @PathVariable FileCategory fileCategory,
         @PathVariable String fileCategoryId,
-        @PathVariable String filename
+        @PathVariable String fileId,
+        @PathVariable String fileName
     ) {
         service.deleteFile(
             JwtUtils.getUserIdFromJwt(jwtToken),
-            fileCategory, Long.parseLong(fileCategoryId),
-            filename);
+            fileCategory,
+            Long.parseLong(fileCategoryId),
+            fileId,
+            fileName);
     }
 
 }

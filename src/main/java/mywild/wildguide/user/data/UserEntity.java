@@ -32,4 +32,6 @@ public class UserEntity extends BaseEntity {
     @Size(min = 6, max = 256)
     private String email;
 
+    private String description;
+
 }

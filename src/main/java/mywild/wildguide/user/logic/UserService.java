@@ -1,5 +1,6 @@
 package mywild.wildguide.user.logic;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,7 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import mywild.wildguide.domain.file.data.FileCategory;
+import mywild.wildguide.domain.file.logic.FileService;
 import mywild.wildguide.framework.error.ForbiddenException;
+import mywild.wildguide.framework.error.NotFoundException;
 import mywild.wildguide.framework.security.jwt.TokenService;
 import mywild.wildguide.framework.security.jwt.TokenType;
 import mywild.wildguide.user.data.UserEntity;
@@ -31,12 +35,18 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserMapper mapper;
+
+    @Autowired
+    private FileService fileService;
+
     @Transactional
     public @Valid Tokens register(@Valid User user) {
         user.setEmail(passwordEncoder.encode(user.getEmail().trim().toLowerCase()));
         user.setUsername(user.getUsername().trim().toLowerCase());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        UserEntity userEntity = repo.save(UserMapper.INSTANCE.dtoToEntity(user));
+        UserEntity userEntity = repo.save(mapper.dtoToEntity(user));
         return new Tokens(
             userEntity.getId(),
             userEntity.getUsername(),
@@ -66,14 +76,18 @@ public class UserService {
     }
 
     public @Valid UserInfo findUserInfo(@Valid @NotEmpty String username) {
-        Optional<UserEntity> foundEntity = repo.findByUsername(username.trim().toLowerCase());
-        if (foundEntity.isPresent()) {
-            return UserInfo.builder()
-                .id(foundEntity.get().getId())
-                .username(foundEntity.get().getUsername())
-                .build();
-        }
-        return null;
+        UserEntity foundEntity = repo.findByUsername(username.trim().toLowerCase())
+            .orElseThrow(() -> new NotFoundException("user.not-found"));
+        UserInfo dto = mapper.entityToDto(foundEntity, findProfileImageUrl(foundEntity));
+        return dto;
+    }
+
+    public @Valid UserInfo updateUserProfile(long userId, String description) {
+        UserEntity userEntity = getValidUser(userId);
+        userEntity.setDescription(description);
+        repo.save(userEntity);
+        UserInfo dto = mapper.entityToDto(userEntity, findProfileImageUrl(userEntity));
+        return dto;
     }
 
     /**
@@ -86,6 +100,14 @@ public class UserService {
         if (!userEntity.isPresent())
             throw new ForbiddenException("user.not-found");
         return userEntity.get();
+    }
+
+    private String findProfileImageUrl(UserEntity foundEntity) {
+        List<String> files = fileService.findFiles(foundEntity.getId(), FileCategory.USER, foundEntity.getId());
+        if (files != null && !files.isEmpty()) {
+            return files.get(0);
+        }
+        return null;
     }
 
 }

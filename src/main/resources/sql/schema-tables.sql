@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS "users" (
     username VARCHAR(64) NOT NULL,
     password VARCHAR(60) NOT NULL,
     email VARCHAR(256) NOT NULL,
+    description TEXT,
     version BIGINT NOT NULL,
     created_by BIGINT,
     created_date TIMESTAMP,

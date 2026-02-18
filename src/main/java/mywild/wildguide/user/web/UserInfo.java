@@ -23,4 +23,8 @@ public class UserInfo {
     @Size(min = 4, max = 64)
     private String username;
 
+    private String description;
+
+    private String image;
+
 }

@@ -27,6 +27,9 @@ public class EntryService extends DomainService {
     @Autowired
     private EntryRepository repoEntry;
 
+    @Autowired
+    private EntryMapper mapper;
+
     public @Valid Paged<Entry> findEntries(long userId, long guideId, int page, String name) {
         checkUserHasGuideAccess(userId, guideId);
         int totalCount = repoEntry.countByGuide(
@@ -35,7 +38,7 @@ public class EntryService extends DomainService {
             guideId, name, pageSize, page * pageSize);
         return new Paged<>(
             page, pageSize, totalCount,
-            entities.stream().map(EntryMapper.INSTANCE::entityToDto).toList());
+            entities.stream().map(mapper::entityToDto).toList());
     }
 
     public @Valid Entry findEntry(long userId, long guideId, long entryId) {
@@ -44,15 +47,15 @@ public class EntryService extends DomainService {
         if (!foundEntity.isPresent()) {
             throw new NotFoundException("entry.not-found");
         }
-        return EntryMapper.INSTANCE.entityToDto(foundEntity.get());
+        return mapper.entityToDto(foundEntity.get());
     }
 
     @Transactional
     public @Valid Entry createEntry(long userId, long guideId, @Valid EntryBase entryBase) {
         checkUserHasGuideOwnership(userId, guideId);
-        return EntryMapper.INSTANCE.entityToDto(
-            repoEntry.save(EntryMapper.INSTANCE.dtoToEntity(
-                EntryMapper.INSTANCE.baseDtoToFullDto(entryBase, guideId))));
+        return mapper.entityToDto(
+            repoEntry.save(mapper.dtoToEntity(
+                mapper.baseDtoToFullDto(entryBase, guideId))));
     }
 
     @Transactional
@@ -62,8 +65,8 @@ public class EntryService extends DomainService {
         if (!foundEntity.isPresent()) {
             throw new NotFoundException("entry.not-found");
         }
-        return EntryMapper.INSTANCE.entityToDto(
-            repoEntry.save(EntryMapper.INSTANCE.dtoToExistingEntity(
+        return mapper.entityToDto(
+            repoEntry.save(mapper.dtoToExistingEntity(
                 foundEntity.get(), entryBase)));
     }
 
