@@ -2,6 +2,7 @@ package mywild.wildguide.domain.file.web;
 
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -69,18 +70,21 @@ public class FileController extends BaseController {
     }
 
     @Operation(summary = "Create a new File.")
-    @PostMapping(path = "/files/{fileCategory}/{fileCategoryId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String createFile(
+    @PostMapping(
+        path = "/files/{fileCategory}/{fileCategoryId}/upload",
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Map<String, String> createFile(
         JwtAuthenticationToken jwtToken,
         @PathVariable FileCategory fileCategory,
         @PathVariable String fileCategoryId,
         @RequestPart MultipartFile file
     ) {
-        return service.createFile(
+        var url = service.createFile(
             JwtUtils.getUserIdFromJwt(jwtToken),
             fileCategory,
             Long.parseLong(fileCategoryId),
             file);
+        return Map.of("url", url);
     }
 
     @Operation(summary = "Delete a specific File.")

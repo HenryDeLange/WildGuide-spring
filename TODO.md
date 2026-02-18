@@ -1,5 +1,7 @@
 # TODO List
 
+- TODO: Limit the max size up file uploads
+
 - TODO: Implement "reset/forgot password" (using email?)
 - TODO: Implement "change password"
 - TODO: Add unit tests to test guide/entry CRUD permissions

@@ -69,7 +69,7 @@ public class FileService extends DomainService {
                 .collect(Collectors.toList());
         }
         catch (NoSuchFileException ex) {
-            log.trace(ex.getMessage(), ex);
+            log.trace("FileService.findFiles: " + ex.getMessage());
             return Collections.emptyList();
         }
         catch (IOException ex) {
@@ -112,6 +112,7 @@ public class FileService extends DomainService {
         }
         try {
             Files.delete(filePath);
+            Files.delete(filePath.getParent());
         }
         catch (IOException ex) {
             throw new ApplicationException("file.error");
