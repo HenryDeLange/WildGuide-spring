@@ -18,6 +18,6 @@ public interface UserMapper {
     @Mapping(target = "lastModifiedDate", ignore = true)
     public UserEntity dtoToEntity(User dto);
 
-    public UserInfo entityToDto(UserEntity entity, String image);
+    public UserInfo entityToDto(UserEntity entity);
 
 }

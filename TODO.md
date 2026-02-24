@@ -1,6 +1,8 @@
 # TODO List
 
 - TODO: Limit the max size up file uploads
+- TODO: Add endpoint to return thumbnails of images and generic thumbnails for other file types
+- TODO: Make sure only images are uplaoded as icons
 
 - TODO: Implement "reset/forgot password" (using email?)
 - TODO: Implement "change password"

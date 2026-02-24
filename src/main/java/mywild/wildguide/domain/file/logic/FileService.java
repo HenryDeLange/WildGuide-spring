@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,9 @@ public class FileService extends DomainService {
 
     @Autowired
     private EntryRepository repoEntry;
+
+    @Autowired
+    private FileIdGenerator fileIdGenerator;
 
     @Value("${mywild.wildguide.file-upload-path}")
     private String fileUploadFolder;
@@ -89,7 +91,7 @@ public class FileService extends DomainService {
 
     public String createFile(long userId, FileCategory fileCategory, long fileCategoryId, MultipartFile file) {
         checkVisibility(userId, fileCategory, fileCategoryId);
-        String fileId = UUID.randomUUID().toString();
+        String fileId = fileIdGenerator.generateId();
         String filename = file.getOriginalFilename();
         Path filePath = getFilePath(fileCategory, fileCategoryId, fileId, filename);
         try {
@@ -120,24 +122,24 @@ public class FileService extends DomainService {
     }
 
     private String getFileUrl(long userId, FileCategory fileCategory, long fileCategoryId, String fileId, String filename) {
-        return apiPath + "/users/" + userId + "/files/" + fileCategory + "/" + fileCategoryId + "/" + fileId + "/" + filename;
+        return apiPath + userId + "/files/" + fileCategory + "/" + fileCategoryId + "/" + fileId + "/" + filename;
     }
 
-    private Path getBasePath(FileCategory fileCategory, long fileCategoryId) {
+    protected Path getBasePath(FileCategory fileCategory, long fileCategoryId) {
         Path basePath = fileUploadPath
             .resolve(fileCategory.name())
             .resolve(String.valueOf(fileCategoryId));
         return basePath;
     }
 
-    private Path getFilePath(FileCategory fileCategory, long fileCategoryId, String fileId, String filename) {
+    protected Path getFilePath(FileCategory fileCategory, long fileCategoryId, String fileId, String filename) {
         return getBasePath(fileCategory, fileCategoryId)
             .resolve(fileId)
             .resolve(filename)
             .normalize().toAbsolutePath();
     }
 
-    private void checkVisibility(long userId, FileCategory fileCategory, long fileCategoryId) {
+    protected void checkVisibility(long userId, FileCategory fileCategory, long fileCategoryId) {
         try {
             switch (fileCategory) {
                 case GUIDE:

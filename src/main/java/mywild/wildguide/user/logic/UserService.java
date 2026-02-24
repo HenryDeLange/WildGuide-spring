@@ -1,6 +1,5 @@
 package mywild.wildguide.user.logic;
 
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import mywild.wildguide.domain.file.data.FileCategory;
-import mywild.wildguide.domain.file.logic.FileService;
 import mywild.wildguide.framework.error.ForbiddenException;
 import mywild.wildguide.framework.error.NotFoundException;
 import mywild.wildguide.framework.security.jwt.TokenService;
@@ -37,9 +34,6 @@ public class UserService {
 
     @Autowired
     private UserMapper mapper;
-
-    @Autowired
-    private FileService fileService;
 
     @Transactional
     public @Valid Tokens register(@Valid User user) {
@@ -78,16 +72,14 @@ public class UserService {
     public @Valid UserInfo findUserInfo(@Valid @NotEmpty String username) {
         UserEntity foundEntity = repo.findByUsername(username.trim().toLowerCase())
             .orElseThrow(() -> new NotFoundException("user.not-found"));
-        UserInfo dto = mapper.entityToDto(foundEntity, findProfileImageUrl(foundEntity));
-        return dto;
+        return mapper.entityToDto(foundEntity);
     }
 
     public @Valid UserInfo updateUserProfile(long userId, String description) {
         UserEntity userEntity = getValidUser(userId);
         userEntity.setDescription(description);
         repo.save(userEntity);
-        UserInfo dto = mapper.entityToDto(userEntity, findProfileImageUrl(userEntity));
-        return dto;
+        return mapper.entityToDto(userEntity);
     }
 
     /**
@@ -100,14 +92,6 @@ public class UserService {
         if (!userEntity.isPresent())
             throw new ForbiddenException("user.not-found");
         return userEntity.get();
-    }
-
-    private String findProfileImageUrl(UserEntity foundEntity) {
-        List<String> files = fileService.findFiles(foundEntity.getId(), FileCategory.USER, foundEntity.getId());
-        if (files != null && !files.isEmpty()) {
-            return files.get(0);
-        }
-        return null;
     }
 
 }

@@ -31,30 +31,29 @@ public class FileController extends BaseController {
     private FileService service;
     
     @Operation(summary = "Find all Files associated with the specified resource, that are visible to User (owner, member or public).")
-    @GetMapping("/users/{userId}/files/{fileCategory}/{fileCategoryId}")
+    @GetMapping("/files/{fileCategory}/{fileCategoryId}")
     public List<String> findFiles(
+        JwtAuthenticationToken jwtToken,
         @PathVariable FileCategory fileCategory,
-        @PathVariable String fileCategoryId,
-        @PathVariable String userId
+        @PathVariable String fileCategoryId
     ) {
         return service.findFiles(
-            Long.parseLong(userId),
+            JwtUtils.getUserIdFromJwt(jwtToken),
             fileCategory,
             Long.parseLong(fileCategoryId));
     }
 
     @Operation(summary = "Download the specified File, if visible to the User (owner, member or public).")
-    @GetMapping("/users/{userId}/files/{fileCategory}/{fileCategoryId}/{fileId}/{filename}")
+    @GetMapping("/files/{fileCategory}/{fileCategoryId}/{fileId}/{filename}")
     public ResponseEntity<Resource> downloadFile(
         JwtAuthenticationToken jwtToken,
         @PathVariable FileCategory fileCategory,
         @PathVariable String fileCategoryId,
         @PathVariable String fileId,
-        @PathVariable String filename,
-        @PathVariable String userId
+        @PathVariable String filename
     ) throws MalformedURLException {
         Resource fileResource = service.findFile(
-            Long.parseLong(userId),
+            JwtUtils.getUserIdFromJwt(jwtToken),
             fileCategory,
             Long.parseLong(fileCategoryId),
             fileId,
@@ -69,9 +68,9 @@ public class FileController extends BaseController {
             .body(fileResource);
     }
 
-    @Operation(summary = "Create a new File.")
+    @Operation(summary = "Create a new File associated with the specified category.")
     @PostMapping(
-        path = "/files/{fileCategory}/{fileCategoryId}/upload",
+        path = "/files/{fileCategory}/{fileCategoryId}",
         consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Map<String, String> createFile(
         JwtAuthenticationToken jwtToken,
@@ -87,7 +86,7 @@ public class FileController extends BaseController {
         return Map.of("url", url);
     }
 
-    @Operation(summary = "Delete a specific File.")
+    @Operation(summary = "Delete the specified File.")
     @DeleteMapping("/files/{fileCategory}/{fileCategoryId}/{fileId}/{fileName}")
     public void deleteFile(
         JwtAuthenticationToken jwtToken,

@@ -78,7 +78,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                     // Domain Endpoints
                     .requestMatchers(HttpMethod.GET, apiPath + "/guides/stars").authenticated()
                     .requestMatchers(HttpMethod.GET, apiPath + "/guides/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, apiPath + "/users/*/files/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, apiPath + "/files/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, apiPath + "/icons/**").permitAll()
                     .anyRequest().hasAuthority("SCOPE_access"); // .anyRequest().authenticated()
             })
             // Indicate this is a Resource Server that accepts JWT tokens

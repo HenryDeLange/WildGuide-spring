@@ -1,7 +1,6 @@
 package mywild.wildguide.domain.file.data;
 
-public enum FileCategory {
+public enum IconCategory {
     USER,
-    GUIDE,
-    ENTRY,
+    GUIDE
 }

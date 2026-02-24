@@ -25,6 +25,4 @@ public class UserInfo {
 
     private String description;
 
-    private String image;
-
 }
