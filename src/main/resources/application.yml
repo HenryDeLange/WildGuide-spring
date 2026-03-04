@@ -29,19 +29,20 @@ spring:
         console:
             enabled: false
             path: /h2-console
+    web:
+        error:
+            whitelabel:
+                enabled: false
+            include-message: always
+            include-binding-errors: always
+            include-exception: true
+            # include-stacktrace: always
 
 server:
     port: 8080
     compression:
         enabled: true
         min-response-size: 1KB
-    error:
-        whitelabel:
-            enabled: false
-        include-message: always
-        include-binding-errors: always
-        include-exception: true
-        # include-stacktrace: always
     shutdown: graceful
 
 springdoc:
@@ -77,7 +78,7 @@ mywild:
             private: ${JWT_PRIVATE_KEY}
             public: ${JWT_PUBLIC_KEY}
     cors: ${CORS}
-    api-path: api/v1
+    api-path: /api/v1
     wildguide:
         concurrent-users-limit: 100
         user-rate-limit: 75
