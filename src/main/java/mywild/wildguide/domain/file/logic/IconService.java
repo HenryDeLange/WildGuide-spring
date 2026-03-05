@@ -105,7 +105,7 @@ public class IconService extends DomainService {
     }
 
     private String getFileUrl(long userId, IconCategory iconCategory, long iconCategoryId) {
-        return apiPath + userId + "/icons/" + iconCategory + "/" + iconCategoryId;
+        return apiPath + "/icons/" + iconCategory + "/" + iconCategoryId;
     }
 
     private FileCategory getFileCategory(IconCategory iconCategory) {

@@ -122,7 +122,7 @@ public class FileService extends DomainService {
     }
 
     private String getFileUrl(long userId, FileCategory fileCategory, long fileCategoryId, String fileId, String filename) {
-        return apiPath + userId + "/files/" + fileCategory + "/" + fileCategoryId + "/" + fileId + "/" + filename;
+        return apiPath + "/files/" + fileCategory + "/" + fileCategoryId + "/" + fileId + "/" + filename;
     }
 
     protected Path getBasePath(FileCategory fileCategory, long fileCategoryId) {
