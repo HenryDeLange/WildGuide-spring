@@ -30,7 +30,7 @@ import mywild.wildguide.framework.error.NotFoundException;
 @Service
 public class IconService extends DomainService {
 
-    private static final String ICON_FILE_ID = "icon";
+    protected static final String ICON_FILE_ID = "icon";
     private static final String ICON_FILE_NAME = "avatar";
 
     @Autowired

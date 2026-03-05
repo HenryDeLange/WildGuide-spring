@@ -66,6 +66,7 @@ public class FileService extends DomainService {
         try (Stream<Path> stream = Files.walk(basePath)) {
             return stream
                 .filter(Files::isRegularFile)
+                .filter(file -> !file.getParent().getFileName().toString().equalsIgnoreCase(IconService.ICON_FILE_ID))
                 .map(file -> getFileUrl(userId, fileCategory, fileCategoryId, 
                     file.getParent().getFileName().toString(), file.getFileName().toString()))
                 .collect(Collectors.toList());
